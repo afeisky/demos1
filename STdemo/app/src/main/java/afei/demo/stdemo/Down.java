@@ -226,7 +226,7 @@ public class Down {
             f = new File(dir);
             File[] flist = f.listFiles();
             int i=0;
-            if (flist.length>6)
+            if (flist!=null && flist.length>6)
                 i=flist.length-6;
             for ( ; flist!=null && i < flist.length; i++) {
                 Logd( i + ":" + flist[i].getName()+" size:"+flist[i].length());
@@ -240,6 +240,7 @@ public class Down {
 			//write file:
             nListUrls=0;
             isRunning=true;
+            show_callback("-------"+ymdhms.format(new Date()));
             goon();
 
         }catch (Exception e){
@@ -350,13 +351,13 @@ public class Down {
     private void goon(){
         Loge("goon()");
         if (!isRunning) {
-            show_callback("Cancel!");
+            show_callback_finish("Cancel!");
             //startTimer(18000);
             return; // exit Down!
         }
         cURLs u=listUrls[nListUrls];
         if (u==null){
-            show_callback_finish();
+            show_callback_finish("Finish");
             zipFile();
             isFinish=true;
             //start(0);
@@ -528,6 +529,7 @@ public class Down {
                     FileOutputStream out = new FileOutputStream(filejson);
                     out.write(json.toString().getBytes());
                     out.close();
+                    show_callback("Success:" + u.url);
                     u.filePathName=filejson;
                     nListUrls++;
                     goon();
@@ -852,7 +854,7 @@ public class Down {
                     sb.append(",");
                 }
             }
-            content=sb.toString();
+            content=sb.toString()+",aaaa";
             subject=attachment.get(0).getName();
         }
         boolean draft=false;
@@ -875,7 +877,7 @@ public class Down {
         Bundle mBundle = new Bundle();
         mBundle.putSerializable("data",new DataCallback(0, comment, 0));
         intent.putExtras(mBundle);
-        //mContext.sendBroadcast(intent);
+        mContext.sendBroadcast(intent);
     }
     private void show_callback(String comment,int percent){
         Loge("22:"+comment);
@@ -883,15 +885,15 @@ public class Down {
         Bundle mBundle = new Bundle();
         mBundle.putSerializable("data",new DataCallback(1, comment, 0));
         intent.putExtras(mBundle);
-        //mContext.sendBroadcast(intent);
+        mContext.sendBroadcast(intent);
     }
-    private void show_callback_finish(){
-        Loge("33: finish!");
+    private void show_callback_finish(String comment){
+        Loge("33: "+comment+"! "+ymdhms.format(new Date()));
         Intent intent = new Intent(MyService.ActionUI);
         Bundle mBundle = new Bundle();
-        mBundle.putSerializable("data",new DataCallback(2, "finish", 0));
+        mBundle.putSerializable("data",new DataCallback(2, comment+" "+ymdhms.format(new Date()), 0));
         intent.putExtras(mBundle);
-        //mContext.sendBroadcast(intent);
+        mContext.sendBroadcast(intent);
     }
 
     class cURLs {

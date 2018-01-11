@@ -44,7 +44,7 @@ public class MyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!isRunning) {
-            start1(intent);
+            start(intent);
             isRunning = true;
         }
         return super.onStartCommand(intent, flags, startId);
@@ -66,60 +66,62 @@ public class MyService extends Service {
     }
     private int n=0;
 
-    private void start1(Intent intent) {
-        //regReceiver();
-        startDown();
+    private void start(Intent intent) {
+        regReceiver();
+        startAlmTimer();
+        startDownPre();
     }
     private SimpleDateFormat ymdhms = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private void startDown(){
-        Log.e(TAG, "startDown() 1, "+ymdhms.format(new Date()));
-        if (Global.mDown == null) {
-            Log.e(TAG, "startDown() 2");
-            Global.mDown = new Down(mContext);
-        }
-        Log.e(TAG, "startDown() 3, "+Global.mDown.isRunning());
+        Log.e(TAG, "startDown() 11, "+Global.mDown.isRunning());
         if (Global.mDown.isRunning()) {
             //Global.mDown.stop();
         } else {
             Global.mDown.start(1);
         }
-        Log.e(TAG, "startDown() 4, "+Global.mDown.isRunning());
+        Log.e(TAG, "startDown() 22, "+Global.mDown.isRunning());
+    }
+
+    private void startDownPre(){
+        Log.e(TAG, "startDownPre() 1, "+ymdhms.format(new Date()));
+        if (Global.mDown == null) {
+            Log.e(TAG, "startDownPre() 2");
+            Global.mDown = new Down(mContext);
+        }
+        String timeNow = new SimpleDateFormat("HHmm").format(new Date());
+        int time1 = Integer.valueOf(timeNow);
+        if (time1 >= 1815 || time1 <= 800) {
+            startDown();
+        }else{
+            timerCount++;
+            if (timerCount>100){
+                timerCount=1;
+            }
+            timeNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            updateUI("Timer:" + timeNow, timerCount % 100);
+            return;
+        }
     }
     private void regReceiver(){
         IntentFilter filter = new IntentFilter(MyService.ActionDown);
         registerReceiver(broadcastReceiver, filter);
 
+    }
+    private void startAlmTimer(){
         Intent intent =new Intent(ActionDown);
-        PendingIntent sender=PendingIntent.getBroadcast(this, 0, intent, 0);
+        PendingIntent pi=PendingIntent.getBroadcast(this, 0, intent, 0);
         //Calendar calendar=Calendar.getInstance();
         //calendar.setTimeInMillis(System.currentTimeMillis());
         //calendar.add(Calendar.SECOND, 20);
         AlarmManager alarm=(AlarmManager)getSystemService(ALARM_SERVICE);
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),2000000, sender);
-    }
-    private void sendReciver(){
-        Intent intent = new Intent(ActionDown);
-        //intent.putExtra("count", ":"+count);
-        sendBroadcast(intent);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),900000, pi);
     }
 
     private int timerCount=0;
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String timeNow = new SimpleDateFormat("HHmm").format(new Date());
-            int time1 = Integer.valueOf(timeNow);
-            if (time1 >= 1815 || time1 <= 800) {
-                startDown();
-            }else{
-                timerCount++;
-                if (timerCount>100){
-                    timerCount=1;
-                }
-                timeNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                updateUI("Timer:" + timeNow, timerCount % 100);
-                return;
-            }
+            startDownPre();
         }
     };
     private void updateUI(String comment,int percent){

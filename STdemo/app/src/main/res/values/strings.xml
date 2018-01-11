@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">JsonViewer</string>
+    <string name="app_name">STdemo</string>
     <string name="turn_on_storage_permission">Please turn on Storage permission in app permissions.</string>
-    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity">MainActivity</string>
 </resources>

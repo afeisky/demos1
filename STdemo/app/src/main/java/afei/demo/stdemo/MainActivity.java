@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -29,7 +30,6 @@ public class MainActivity extends Activity  {
     private Intent mIntent;
     private TextView mMessageView;
     private ProgressBar mProgressbar;
-    private TextView textView1;
     private Button btnDown;
     private String htmldata="";
     @Override
@@ -38,7 +38,6 @@ public class MainActivity extends Activity  {
         setContentView(R.layout.activity_main);
         mMessageView = (TextView) findViewById(R.id.download_message);
         mProgressbar = (ProgressBar) findViewById(R.id.download_progress);
-        textView1 = (TextView) findViewById(R.id.download_message);
         mWebView= (WebView) findViewById(R.id.webView1);
         btnDown = (Button) findViewById(R.id.download_btn);
         btnDown.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +58,11 @@ public class MainActivity extends Activity  {
         } else {
             Log.d(TAG, "----Game Over!");
         }
+
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setUseWideViewPort(false);
+        webSettings.setLoadWithOverviewMode(false);
+
     }
 
     private String strHtml="";
@@ -148,16 +152,27 @@ public class MainActivity extends Activity  {
             if (intent.getAction().equals(MyService.ActionUI)) {
                 DataCallback data = (DataCallback) intent.getSerializableExtra("data");
                 //textView.setText(intent.getExtras().getString("data"));
-                String str = "["+data.type+"] "+data.comment;
-                lines.add(str + "</br>");
-                if (lines.size()>15){
-                    lines.remove(0);
+                String str = "[" + data.type + "] " + data.comment;
+                if (data.type==1){
+                    mMessageView.setText(data.comment);
+                    mProgressbar.setProgress(data.percent);
+                    btnDown.setText("Stop");
+                }else {
+                    if (data.type==2){
+                        btnDown.setText("Start");
+                    }
+                    str=data.comment;
+                    lines.add("<div>"+str + "</div>");
+                    if (lines.size() > 100) {
+                        lines.remove(0);
+                    }
+                    str = "";
+                    for (int i = 0; i < lines.size(); i++) {
+                        str += lines.get(i);
+                    }
+                    mWebView.loadData(str, "text/html", "utf8");
+
                 }
-                str="";
-                for (int i=0;i<lines.size();i++){
-                    str+=lines.get(i);
-                }
-                mWebView.loadData(str, "text/html", "utf8");
                 Log.e(TAG, str);
             }
         }
@@ -173,9 +188,13 @@ public class MainActivity extends Activity  {
         this.getApplication().stopService(intentService);
     }
     private void init2(){
-
+        if (Global.mDown == null) {
+            Global.mDown = new Down(this.getApplicationContext());
+        }
         if (Global.mDown.isRunning()) {
             Global.mDown.stop();
+            //stopService();
+            finish();
         } else {
             Global.mDown.start(1);
         }
