@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "afei.demo.jsonviewer"
+        applicationId "afei.stdemo.jsonviewer"
         minSdkVersion 24
         targetSdkVersion 26
         versionCode 1
@@ -16,6 +16,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets { main { java.srcDirs = ['src/main/java', 'src/main/java/HistDown'] } }
 }
 
 dependencies {

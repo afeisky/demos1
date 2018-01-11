@@ -1,3 +1,20 @@
 #afei's
 
 /out
+
+
+
+
+
+# git branch -a  # view all branch
+# git branch newBranch1 ; git checkout newBranch1;  # create branch ; switch(checkout) branch
+# git push origin newBranch1  #push new newBranch1 to github.com
+# git tag stdemo_v1.0; git push origin --tags ; # push all tags to remote server.
+#
+#
+#
+#
+#
+#
+#
+#

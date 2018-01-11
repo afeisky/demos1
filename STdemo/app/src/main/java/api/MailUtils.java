@@ -202,7 +202,7 @@ public class MailUtils {
         return 0;
     }
 
-/* ---demo usage:--
+/* ---stdemo usage:--
     private void seendMail(){
         // 发送文件到邮箱(调用系统的软件)
         //sendFileIntent();
