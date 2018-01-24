@@ -1,12 +1,9 @@
 package afei.stdemo.dailydown;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,10 +28,12 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import afei.stdemo.activity.DataCallback;
+import afei.stdemo.Data.DataCallback;
 
-import api.MailUtils;
-import api.ZipUtils;
+import afei.api.LogX;
+import afei.api.MailUtils;
+import afei.api.ZipUtils;
+import afei.stdemo.Data.Global;
 
 /**
  * Created by chaofei on 17-12-7.
@@ -43,7 +42,6 @@ import api.ZipUtils;
 public class DailyDown implements Runnable{
     private String TAG = "[DailyDown]";
 
-    private String workDir = "";
     private String sina_dir = "";
     private String sse_dir = "";
     private int blocSize = 248000;//
@@ -182,25 +180,25 @@ public class DailyDown implements Runnable{
             }
 
             File f = Environment.getExternalStorageDirectory();
-            workDir = f.getAbsolutePath() + "/DownloadData";
-            f = new File(workDir);
+            Global.workPath = f.getAbsolutePath() + Global.WORK_DIR;
+            f = new File(Global.workPath);
             if (!f.exists()) {
                 f.mkdir();
             }
             if (!f.exists()) {
-                Logd("Error:exists " + workDir);
+                Logd("Error:exists " + Global.workPath);
                 return;
             }
             if (!f.canRead() && !f.canWrite()) {
-                Logd("Error:no permission " + workDir);
+                Logd("Error:no permission " + Global.workPath);
                 return;
             }
-            sina_dir = workDir + "/download_sina";
+            sina_dir = Global.workPath + "/download_sina";
             f = new File(sina_dir);
             if (!f.exists()) {
                 f.mkdir();
             }
-            String dir = workDir + "/download_sina/sina_bk";
+            String dir = Global.workPath + "/download_sina/sina_bk";
             f = new File(dir);
             File[] flist = f.listFiles();
             int i = 0;
@@ -212,13 +210,14 @@ public class DailyDown implements Runnable{
                     //show_callback(i + ":" + flist[i].getName()+" size:"+flist[i].length());
                 }
             }
-            sse_dir = workDir + "/download_sse";
+            sse_dir = Global.workPath + "/download_sse";
             f = new File(sse_dir);
             if (!f.exists()) {
                 f.mkdir();
             }
             //write file:
             nListUrls = 0;
+            g_url_date="";
             isRunning = true;
             show_callback("-------" + ymdhms.format(new Date()));
             goon();
@@ -413,7 +412,7 @@ public class DailyDown implements Runnable{
                             if (fj.exists() && fj.length()>10000) {
                                 show_callback("Exist:" + u.url);
                                 if (checkSendMail()){
-                                    //nListUrls=listUrlx.size();
+                                    nListUrls=listUrlx.size();
                                 }
                                 nListUrls++;
                                 goon();
@@ -425,7 +424,7 @@ public class DailyDown implements Runnable{
                         }
                     }
                     day = u.jsono.getString("day");
-                    Log.i(TAG, "day:" + day);
+                    LogX.i(TAG, "day:" + day);
                     int n = u.jsono.getJSONArray("items").length();
                     Logd( "json count:"  + n + "/" + u.jsono.getInt("count"));
                     if (day.length() > 0 && n==u.jsono.getInt("count")) {
@@ -503,7 +502,7 @@ public class DailyDown implements Runnable{
                     JSONArray list = json.getJSONArray("list");
                     Date d = new SimpleDateFormat("yyyyMMdd hhmmss").parse(date + " " + time); //"20171009 151509"
                     String create_time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(d);
-                    Log.i(TAG,"sse_"+date + "," + time + "," + create_time + "," + total);
+                    LogX.i(TAG,"sse_"+date + "," + time + "," + create_time + "," + total);
                     String datetime = create_time;
                     String sql = "";
                     int count = 0;
@@ -583,6 +582,7 @@ public class DailyDown implements Runnable{
         private int blocSize=1024;//
         public String retBuff="";
         private String comment="";
+        private int nTry=0;
         public downTask(){
             try {
 
@@ -615,13 +615,15 @@ public class DailyDown implements Runnable{
                         break;
                     }
                 }
+
                 this.comment=u.url.substring(u.url.length()-30,u.url.length())+" --> " +u.nTry;
                 this.urlD = u.url;
                 this.encode=u.encode;
+                this.nTry=u.nTry;
                 this.filePathName = "";
                 this.blocSize = 248000;//
             }catch (Exception e){
-
+                Loge("Error: downTask init fail!"+e.getStackTrace().toString());
             }
         }
         public downTask(String downloadUrl, int threadNum, String filepath) {
@@ -690,10 +692,11 @@ public class DailyDown implements Runnable{
                     if (in != null) {
                         in.close();
                     }
-
-
             }  catch (Exception e) {
                 Loge("[run] Error:"+e.getMessage());
+                if (nTry>0 && nTry%100==0){
+                    show_callback("Error: down fail"+e.getStackTrace());
+                }
                 sendMessage(1,100,100,"","","");
             }
 
@@ -779,7 +782,7 @@ public class DailyDown implements Runnable{
     private String zipFilePathName="";
     private boolean zipFile(){
         mailFileName="stdaily" + g_url_date;
-        zipFilePathName=workDir + "/"+mailFileName+ ".zip";
+        zipFilePathName=Global.workPath + "/"+mailFileName+ ".zip";
         File fzip=new File(zipFilePathName);
         if (!fzip.exists()){
             List<File> files = new ArrayList<File>();
@@ -803,11 +806,11 @@ public class DailyDown implements Runnable{
     }
     private boolean checkSendMail(){
         mailFileName="stdaily" + g_url_date;
-        String filename=workDir + "/"+mailFileName+ ".sendok";
+        String filename=Global.workPath + "/"+mailFileName+ ".sendok";
         File fok=new File(filename);
         Logw("fok:"+fok.getAbsolutePath());
         if (fok.exists()){
-            show_callback("mail have send OK!");
+            show_callback("mail have send!  "+g_url_date);
             return true;
         }
         return false;
@@ -817,7 +820,7 @@ public class DailyDown implements Runnable{
     }
 
     private void sendJavaMail() {
-        String filename=workDir + "/"+mailFileName+ ".sendok";
+        String filename=Global.workPath + "/"+mailFileName+ ".sendok";
         File fok=new File(filename);
         Logw("fok:"+fok.getAbsolutePath());
         if (fok.exists()){
@@ -846,33 +849,33 @@ public class DailyDown implements Runnable{
                     sb.append(",");
                 }
             }
-            content=sb.toString()+",aaaa";
+            content=sb.toString()+",h";
             subject=attachment.get(0).getName();
         }
         boolean draft=false;
         MailUtils senMail = new MailUtils(mailserver,mailport,mailac,mailpa,validate);//这个类用来发送邮件
         if (senMail.sendMail(mailac,to,subject,content,attachment,draft)==0){
-            Log.d("JavaMail:","Send Success!");
+            LogX.d("JavaMail:","Send Success!");
             try {
                 fok.createNewFile();
-                show_callback("mail send OK!");
+                show_callback("mail send OK! "+g_url_date);
             }catch (Exception e){
-                Log.d("JavaMail:","Create sendok fail!");
+                LogX.d("JavaMail:","Create sendok fail!");
                 show_callback("Error: mail send fail!");
             }
 
         }
     }
     private void show_callback(String comment){
-        Logw("11:"+comment);
+        //Logw("11:"+comment);
         DataCallback.updateUI(mContext,DataCallback.TYPE_DAILYDOWN_START,comment, 0);
     }
     private void show_callback(String comment,int percent){
-        Logw("22:"+comment);
+        //Logw("22:"+comment);
         DataCallback.updateUI(mContext,DataCallback.TYPE_DAILYDOWN_DO,comment, 0);
     }
     private void show_callback_finish(String comment){
-        Logw("33: "+comment+"! "+ymdhms.format(new Date()));
+        //Logw("33: "+comment+"! "+ymdhms.format(new Date()));
         DataCallback.updateUI(mContext,DataCallback.TYPE_DAILYDOWN_FINISH,comment+" "+ymdhms.format(new Date()), 0);
     }
 
@@ -894,13 +897,13 @@ public class DailyDown implements Runnable{
     }
     
     private void Logd(String str){
-        Log.e(TAG, str);
+        LogX.e(TAG, str);
     }
     private void Logw(String str){
-        Log.w(TAG, str);
+        LogX.w(TAG, str);
     }
     private void Loge(String str){
-        Log.e(TAG, str);
+        LogX.e(TAG, str);
     }
 
 

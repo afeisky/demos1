@@ -1,4 +1,4 @@
-package api;
+package afei.api;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

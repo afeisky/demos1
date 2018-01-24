@@ -1,11 +1,12 @@
-package afei.stdemo.activity;
+package afei.stdemo.Data;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import java.io.Serializable;
+
+import afei.api.LogX;
 
 /**
  * Created by chaofei on 17-12-18.
@@ -30,7 +31,7 @@ public class DataCallback  implements Serializable {
     }
 
     public static void updateUI(Context mContext,int type, String comment,int percent){
-        Log.w(TAG,"555:"+comment+",percent:"+percent);
+        LogX.w(TAG,"555:"+comment+",percent:"+percent);
         Intent intent = new Intent(BootupReceiver.ACTION_UPDATE_UI);
         Bundle mBundle = new Bundle();
         DataCallback  dcb=new DataCallback(type, comment, percent);
@@ -39,7 +40,7 @@ public class DataCallback  implements Serializable {
         mContext.sendBroadcast(intent);
     }
     public static void updateUI(Context mContext,String comment){
-        Log.w(TAG,"666:"+comment);
+        LogX.w(TAG,"666:"+comment);
         Intent intent = new Intent(BootupReceiver.ACTION_UPDATE_UI);
         Bundle mBundle = new Bundle();
         DataCallback  dcb=new DataCallback(5, comment, 0);

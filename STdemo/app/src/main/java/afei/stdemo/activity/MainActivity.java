@@ -9,8 +9,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -20,9 +18,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import afei.stdemo.Data.BootupReceiver;
+import afei.stdemo.Data.DataCallback;
+import afei.stdemo.Data.TimerService;
 import afei.stdemo.dailydown.DailyReceiver;
+import afei.api.LogX;
 
 
 public class MainActivity extends Activity  {
@@ -50,7 +54,9 @@ public class MainActivity extends Activity  {
             }
         });
         btnDown.setText("Start");
-        Log.d(TAG, "----Game Start!!!");
+        SimpleDateFormat ymdhms1 = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        LogX.init("","STdemo"+ymdhms1.format(new Date())+"log.txt");
+        LogX.d(TAG, "----Game Start!!!");
         String action=getIntent().getStringExtra("action");
         if (action!=null && action.length()>0){
             Log.d(TAG, "----onCreate(): action "+action);
@@ -59,7 +65,7 @@ public class MainActivity extends Activity  {
         if (hasGrantExternalRW(this)) {
             init();//sn_down_api();//init();
         } else {
-            Log.w(TAG, "----Game Over!");
+            LogX.w(TAG, "----Game Over!");
         }
 
         WebSettings webSettings = mWebView.getSettings();
@@ -153,7 +159,7 @@ public class MainActivity extends Activity  {
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.w(TAG, "Main Receiver:"+intent.getAction());
+            LogX.w(TAG, "Main Receiver:"+intent.getAction());
             if (intent.getAction().equals(BootupReceiver.ACTION_UPDATE_UI)) {
                 DataCallback data = (DataCallback) intent.getSerializableExtra("data");
                 //textView.setText(intent.getExtras().getString("data"));
@@ -189,7 +195,7 @@ public class MainActivity extends Activity  {
                     mWebView.loadData(str, "text/html", "utf8");
 
                 }
-                Log.w(TAG, str);
+                LogX.w(TAG, str);
             }
         }
     };
@@ -213,10 +219,10 @@ public class MainActivity extends Activity  {
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, 1);
-            Log.w(TAG, "hasGrantExternalRW--11-");
+            LogX.w(TAG, "hasGrantExternalRW--11-");
             return false;
         }
-        Log.w(TAG, "hasGrantExternalRW--22-");
+        LogX.w(TAG, "hasGrantExternalRW--22-");
         return true;
     }
 
@@ -225,21 +231,21 @@ public class MainActivity extends Activity  {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.w(TAG, "onRequestPermissionsResult--1-");
+        LogX.w(TAG, "onRequestPermissionsResult--1-");
         if (requestCode == PERMISSIONS_CODE) {
             for (int i = 0; i < permissions.length; i++) {
                 String permission = permissions[i];
                 int grantResult = grantResults[i];
-                Log.w(TAG, "READ_EXTERNAL_STORAGE--2-");
+                LogX.w(TAG, "READ_EXTERNAL_STORAGE--2-");
                 if (permission.equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     Log.d(TAG, "READ_EXTERNAL_STORAGE--3-");
                     if (grantResult == PackageManager.PERMISSION_GRANTED) {
                         //授权成功后的逻辑
-                        Log.w(TAG, "READ_EXTERNAL_STORAGE--4-");
+                        LogX.w(TAG, "READ_EXTERNAL_STORAGE--4-");
                         init();
                     } else {
                         requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_CODE);
-                        Log.w(TAG, "READ_EXTERNAL_STORAGE--5-");
+                        LogX.w(TAG, "READ_EXTERNAL_STORAGE--5-");
                         mWebView.loadData("Please set app right!", "text/html", "utf8");
                     }
                 }

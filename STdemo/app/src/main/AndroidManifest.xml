@@ -26,13 +26,13 @@ package="afei.stdemo.activity">
         </intent-filter>
     </activity>
     <service
-        android:name="afei.stdemo.activity.TimerService"
+        android:name="afei.stdemo.Data.TimerService"
         android:enabled="true" >
         <intent-filter android:priority="1000" >
             <action android:name="afei.stdemo.activity.TimerService" />
         </intent-filter>
     </service>
-    <receiver android:name="afei.stdemo.activity.BootupReceiver">
+    <receiver android:name="afei.stdemo.Data.BootupReceiver">
         <intent-filter>
             <action android:name="android.intent.action.BOOT_COMPLETED"/>
             <action android:name="android.intent.action.USER_PRESENT"/>
@@ -41,12 +41,6 @@ package="afei.stdemo.activity">
             <action android:name="android.net.wifi.STATE_CHANGE" />
             <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             <action android:name="afei.stdemo.BootupReceiver.actionIntent" />
-        </intent-filter>
-    </receiver>
-    <receiver android:name="afei.stdemo.histdown.HistReceiver">
-        <intent-filter>
-            <action android:name="afei.stdemo.histdown.HistReceiver" />
-
         </intent-filter>
     </receiver>
     <receiver android:name="afei.stdemo.dailydown.DailyReceiver">

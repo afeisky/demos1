@@ -1,4 +1,4 @@
-package api;
+package afei.api;
 
 /**
  * Created by chaofei on 18-1-5.
@@ -126,7 +126,7 @@ public class MailUtils {
                     //        + "(\\.[a-z0-9-]+)*\\.([a-z]{2}|aero|arpa|asia"
                     //        + "|biz|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|"
                     //        + "name|nato|net|org|pro|tel|travel|xxx)$\\b")) {
-                    //    Log.e(TAG, "javamail send fail! to mail address format error!["+item+"]?");//创建带附件的邮件失败
+                    //    LogX.e(TAG, "javamail send fail! to mail address format error!["+item+"]?");//创建带附件的邮件失败
                     //    return 1;
                     //}
                     //设置邮件消息的接受者, Message.RecipientType.TO属性表示接收者的类型为TO
@@ -184,19 +184,19 @@ public class MailUtils {
                 //5、发送邮件消息
                 transport.sendMessage(message, message.getAllRecipients());
                 transport.close();
-                Log.d(TAG, "JavaMail send success!");
+                LogX.d(TAG, "JavaMail send success!");
             }else{
-                Log.d(TAG, "JavaMail save success!");
+                LogX.d(TAG, "JavaMail save success!");
             }
 
         } catch (AddressException e) {
-            Log.e(TAG, "JavaMail send failure!"+e.getMessage());//创建带附件的邮件失败
+            LogX.e(TAG, "JavaMail send failure!"+e.getMessage());//创建带附件的邮件失败
             return 10;
         } catch (MessagingException e) {
-            Log.e(TAG, "JavaMail send failure!"+e.getMessage());//创建带附件的邮件失败
+            LogX.e(TAG, "JavaMail send failure!"+e.getMessage());//创建带附件的邮件失败
             return 20;
         } catch (Exception e) {
-            Log.e(TAG, "JavaMail send failure!"+e.getMessage());//创建带附件的邮件失败
+            LogX.e(TAG, "JavaMail send failure!"+e.getMessage());//创建带附件的邮件失败
             return 30;
         }
         return 0;

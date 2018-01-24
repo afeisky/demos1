@@ -1,4 +1,4 @@
-package afei.stdemo.activity;
+package afei.stdemo.Data;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import afei.stdemo.dailydown.DailyReceiver;
+import afei.api.LogX;
 
 /**
  * Created by chaofei on 17-12-8.
@@ -27,12 +27,9 @@ public class BootupReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String tagAction="";
-        Log.w(TAG,"BroadcastReceiver--->"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        LogX.w(TAG,"BroadcastReceiver--->"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+intent.getAction());
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "ACTION_BOOT_COMPLETED!!!");
-            }
-            Log.d(TAG,"ACTION_BOOT_COMPLETED--->,"+intent.getAction());
+            LogX.d(TAG,"ACTION_BOOT_COMPLETED--->,"+intent.getAction());
             tagAction=Intent.ACTION_BOOT_COMPLETED;
         }else {
             String wifiSSID="";
@@ -41,7 +38,7 @@ public class BootupReceiver extends BroadcastReceiver {
                 if (info.getState().equals(NetworkInfo.State.CONNECTED)) {
                     WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
                     WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-                    Log.d(TAG, "Wifi SSID:" + wifiInfo.getSSID());
+                    LogX.d(TAG, "Wifi SSID:" + wifiInfo.getSSID());
                     wifiSSID=wifiInfo.getSSID();
                 }
             }
@@ -50,30 +47,30 @@ public class BootupReceiver extends BroadcastReceiver {
                 int wifistate = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_DISABLED);
 
                 if (wifistate == WifiManager.WIFI_STATE_DISABLED) {
-                    Log.d(TAG, "WIFI disable!");
+                    LogX.d(TAG, "WIFI disable!");
                 }
 
                 if (wifistate == WifiManager.WIFI_STATE_ENABLED) {
-                    Log.d(TAG, "WIFI enabled!");
+                    LogX.d(TAG, "WIFI enabled!");
                     tagAction=intent.getAction()+":"+wifiSSID;
                 }
             }
         }
 
         if (tagAction.length()>0){
-            Log.d(TAG, "-->tagAction : "+tagAction+",  to call service!");
+            LogX.d(TAG, "-->tagAction : "+tagAction+",  to call service!");
             startTimerService(context,tagAction);
         }
         if (intent.getAction().equals(ALAM_INTENT)){
-            Log.w(TAG,"Add alarm!!!!--->"+intent.getAction());
+            LogX.w(TAG,"Add alarm!!!!--->"+intent.getAction());
             String action=intent.getStringExtra("action");
-            Log.w(TAG, "service start! "+action);
+            LogX.w(TAG, "service start! "+action);
             start(context);
         }
     }
 
     private void start(Context context){
-        Log.w(TAG, "startDownPre() 1, "+mdhms.format(new Date()));
+        LogX.w(TAG, "startDownPre() 1, "+mdhms.format(new Date()));
         String timeNow = new SimpleDateFormat("HHmm").format(new Date());
         int time1 = Integer.valueOf(timeNow);
         if (time1 >= 1815 || time1 <= 800) {

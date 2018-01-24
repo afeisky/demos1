@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import afei.api.LogX;
+
 
 /**
  * Created by chaofei on 18-1-11.
@@ -20,7 +22,7 @@ public class DailyReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(ACTION_DAILYDOWN_BEGIN)) {
             String action = intent.getStringExtra("action");
-            Log.w(TAG, "dailydown start! " + action);
+            LogX.w(TAG, "dailydown start! " + action);
             if (mDown==null){
                 mDown=new DailyDown(context);
             }
@@ -31,11 +33,12 @@ public class DailyReceiver extends BroadcastReceiver {
             }
         }else if (intent.getAction().equals(ACTION_DAILYDOWN_END)) {
             String action = intent.getStringExtra("action");
-            Log.w(TAG, "dailydown start! " + action);
+            LogX.w(TAG, "dailydown start! " + action);
             if (mDown!=null){
                 if (mDown.isRunning()) {
                     mDown.stop();
                 }
+                mDown=null;
             }
         }
     }
