@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -62,6 +63,7 @@ public class BootupReceiver extends BroadcastReceiver {
             startTimerService(context,tagAction);
         }
         if (intent.getAction().equals(ALAM_INTENT)){
+            Toast.makeText(context, "afei.stdemo.BootupReceiver.actionIntent", Toast.LENGTH_SHORT).show();
             LogX.w(TAG,"Add alarm!!!!--->"+intent.getAction());
             String action=intent.getStringExtra("action");
             LogX.w(TAG, "service start! "+action);

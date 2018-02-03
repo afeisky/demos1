@@ -255,9 +255,12 @@ public class MainActivity extends Activity  {
 
     @Override
     protected void onDestroy() {
+        LogX.w(TAG, "onDestroy()-1");
         mWebView.destroy();
-        super.onDestroy();
         stopService();
+        unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+        LogX.w(TAG, "onDestroy()-2");
     }
 
 }

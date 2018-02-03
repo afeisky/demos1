@@ -33,11 +33,12 @@ package="afei.stdemo.activity">
         </intent-filter>
     </service>
     <receiver android:name="afei.stdemo.Data.BootupReceiver">
-        <intent-filter>
+        <intent-filter android:priority="1000">
             <action android:name="android.intent.action.BOOT_COMPLETED"/>
             <action android:name="android.intent.action.USER_PRESENT"/>
             <action android:name="android.intent.action.USER_INITIALIZE"/>
             <action android:name="android.intent.action.PRE_BOOT_COMPLETED"/>
+            <action android:name="com.android.deskclock.ALARM_ALERT" />
             <action android:name="android.net.wifi.STATE_CHANGE" />
             <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             <action android:name="afei.stdemo.BootupReceiver.actionIntent" />

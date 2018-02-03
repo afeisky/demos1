@@ -58,7 +58,8 @@ public class DailyDown implements Runnable{
     private List<cURLs> listUrlx=new ArrayList<cURLs>();
     private int nListUrls=0;
     private String g_url_date = "";
-
+    private Date dateStartRun;
+    private Date dateEndRun;
     public static boolean isRunning=false;
     private boolean isFinish=false;
     private Context mContext;
@@ -220,11 +221,24 @@ public class DailyDown implements Runnable{
             g_url_date="";
             isRunning = true;
             show_callback("-------" + ymdhms.format(new Date()));
+            dateStartRun=new Date();
             goon();
 
         }catch (Exception e){
             Loge("[start]Error:"+e.getMessage());
         }
+    }
+    public boolean checkRunlongtime(){
+        dateEndRun=new Date();
+        long from =dateStartRun.getTime();
+        long to = dateEndRun.getTime();
+        int minutes = (int) ((to - from)/(1000 * 60));
+        if (minutes>60){
+            isRunning=false;
+            g_url_date="";
+            return true;
+        }
+        return false;
     }
     private void ss(JSONArray one) {
         try{
@@ -680,7 +694,7 @@ public class DailyDown implements Runnable{
                         }
                         byte[] b = bos.toByteArray();
                         String ss = new String(b, encode);//"utf-8" "gb2312"
-                        Logd( "==" + ss);
+                        LogX.d( TAG,"==" + ss.substring(0,(ss.length()>100)?100:0));//Logd( "==" + ss);
                         retBuff=ss;
                         show_callback(comment,100);
                         sendMessage(0,100,100,"","",ss);

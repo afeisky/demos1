@@ -27,7 +27,9 @@ public class DailyReceiver extends BroadcastReceiver {
                 mDown=new DailyDown(context);
             }
             if (mDown.isRunning()) {
-                //mDown.stop();
+                if (mDown.checkRunlongtime()){
+                    //new Thread(mDown).start();
+                }
             }else{
                 new Thread(mDown).start();
             }

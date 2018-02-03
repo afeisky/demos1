@@ -44,9 +44,12 @@ public class TimerService extends Service {
     }
     @Override
     public void onDestroy() {
-        LogX.w(TAG, "onDestroy()");
+        LogX.w(TAG, "onDestroy() 1");
         isRunning=false;
+        if (pi!=null && alarm!=null){  alarm.cancel(pi);}
         //Toast.makeText(this, "onDestroy()", Toast.LENGTH_SHORT).show();
+        super.onDestroy();
+        LogX.w(TAG, "onDestroy() 2");
     }
     public void stop(){
         this.stopSelf();
@@ -56,14 +59,15 @@ public class TimerService extends Service {
             return TimerService.this;
         }
     }
-
+    PendingIntent pi;
+    AlarmManager alarm;
     private void startAlmTimer(){
         Intent intent =new Intent(BootupReceiver.ALAM_INTENT);
-        PendingIntent pi=PendingIntent.getBroadcast(this, 0, intent, 0);
+        pi=PendingIntent.getBroadcast(this, 0, intent, 0);
         //Calendar calendar=Calendar.getInstance();
         //calendar.setTimeInMillis(System.currentTimeMillis());
         //calendar.add(Calendar.SECOND, 20);
-        AlarmManager alarm=(AlarmManager)getSystemService(ALARM_SERVICE);
+        alarm=(AlarmManager)getSystemService(ALARM_SERVICE);
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),3000000, pi);
         //first send once:
         this.getApplicationContext().sendBroadcast(intent);
