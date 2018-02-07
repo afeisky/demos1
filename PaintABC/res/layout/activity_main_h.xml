@@ -1,0 +1,146 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="38dp"
+        android:layout_height="match_parent"
+        android:background="@color/background_floating_material_dark"
+        android:orientation="vertical"
+ >
+
+        <ImageButton
+            android:id="@+id/btn_color1"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:paddingBottom="@dimen/btn_border"
+            android:paddingLeft="@dimen/btn_border"
+            android:paddingRight="@dimen/btn_border"
+            android:paddingTop="@dimen/btn_border"
+            android:src="@drawable/drawable_white" />
+
+        <ImageButton
+            android:id="@+id/btn_color2"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:paddingBottom="@dimen/btn_border"
+            android:paddingLeft="@dimen/btn_border"
+            android:paddingRight="@dimen/btn_border"
+            android:paddingTop="@dimen/btn_border" />
+
+        <ImageButton
+            android:id="@+id/btn_color3"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:paddingBottom="@dimen/btn_border"
+            android:paddingLeft="@dimen/btn_border"
+            android:paddingRight="@dimen/btn_border"
+            android:paddingTop="@dimen/btn_border"
+            android:src="@drawable/drawable_red" />
+
+        <ImageButton
+            android:id="@+id/btn_color4"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:paddingBottom="@dimen/btn_border"
+            android:paddingLeft="@dimen/btn_border"
+            android:paddingRight="@dimen/btn_border"
+            android:paddingTop="@dimen/btn_border" />
+
+        <ImageButton
+            android:id="@+id/btn_color5"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:paddingBottom="@dimen/btn_border"
+            android:paddingLeft="@dimen/btn_border"
+            android:paddingRight="@dimen/btn_border"
+            android:paddingTop="@dimen/btn_border"
+            android:src="@drawable/drawable_red" />
+
+        <ImageButton
+            android:id="@+id/btn_color6"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:paddingBottom="@dimen/btn_border"
+            android:paddingLeft="@dimen/btn_border"
+            android:paddingRight="@dimen/btn_border"
+            android:paddingTop="@dimen/btn_border"
+            android:src="@drawable/drawable_green" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/darkgray"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/btn_border" >
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_eraser"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:paddingBottom="@dimen/btn_border"
+            android:paddingLeft="@dimen/btn_border"
+            android:paddingRight="@dimen/btn_border"
+            android:paddingTop="@dimen/btn_border"
+            android:text="橡皮" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="8dp"
+            android:background="@color/darkgray"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/btn_border" >
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btn_bg"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:paddingBottom="@dimen/btn_border"
+            android:paddingLeft="@dimen/btn_border"
+            android:paddingRight="@dimen/btn_border"
+            android:paddingTop="@dimen/btn_border"
+            android:src="@drawable/drawable_green" />
+
+        <Button
+            android:id="@+id/btn_clear"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:paddingBottom="@dimen/btn_border"
+            android:paddingLeft="@dimen/btn_border"
+            android:paddingRight="@dimen/btn_border"
+            android:paddingTop="@dimen/btn_border"
+            android:text="清除" />
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:paddingBottom="@dimen/btn_border"
+            android:paddingLeft="@dimen/btn_border"
+            android:paddingRight="@dimen/btn_border"
+            android:paddingTop="@dimen/btn_border"
+            android:text="保存" />
+
+        <Button
+            android:id="@+id/btn_setting"
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:paddingBottom="@dimen/btn_border"
+            android:paddingLeft="@dimen/btn_border"
+            android:paddingRight="@dimen/btn_border"
+            android:paddingTop="@dimen/btn_border"
+            android:text="设置" />
+    </LinearLayout>
+
+	<com.afei.paint.PaintBoard
+        android:id="@+id/canvas1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+        android:background="@android:color/white"/>
+
+</LinearLayout>
