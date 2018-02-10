@@ -29,6 +29,7 @@ public class BootupReceiver extends BroadcastReceiver {
     private final String TAG = "STdemonow:BootupReceiver";
     public static final String ACTION_BOOT="afei.stdemonow.boot";
     public static final String ACTION_UPDATE_UI="afei.stdemonow.updateUI";
+    public static final String ACTION_DOWN_TEMP="afei.stdemonow.download_temp";
     private static int timerCount=0;
     private SimpleDateFormat mdhms = new SimpleDateFormat("MM-dd_HH:mm:ss");
 
@@ -88,7 +89,7 @@ public class BootupReceiver extends BroadcastReceiver {
         String timeNow = new SimpleDateFormat("HHmm").format(new Date());
         LogX.w(TAG, "start() 1, "+timeNow+","+mdhms.format(new Date()));
         int time1 = Integer.valueOf(timeNow);
-        if ((true)||(time1 >= 915 && time1 <= 1131)||(time1 >= 1300 && time1 <= 1515)) {
+        if ((true)||(time1 >= 815 && time1 <= 1131)||(time1 >= 1300 && time1 <= 1515)) {
             startTimerService(context,"");
         }else{
             stopTimerService(context);

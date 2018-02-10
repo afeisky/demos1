@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.UserHandle;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -74,7 +73,7 @@ public class TimerService extends Service {
         //calendar.setTimeInMillis(System.currentTimeMillis());
         //calendar.add(Calendar.SECOND, 20);
         if (down==null) {
-            down=new NowDown1(mContext);
+            down=new NowDown(mContext);
         }
         runDown();
         startAlm();
@@ -89,7 +88,7 @@ public class TimerService extends Service {
         alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),timerLong, pi);
 
     }
-    private NowDown1 down;
+    private NowDown down;
 
     private void runDown(){
         String timeNow = new SimpleDateFormat("HHmm").format(new Date());

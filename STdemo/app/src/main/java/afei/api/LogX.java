@@ -8,8 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import afei.stdemo.Data.Global;
-
 /**
  * Created by chaofei on 18-1-17.
  */
@@ -17,7 +15,7 @@ import afei.stdemo.Data.Global;
 public class LogX {
 
     private static File fileSave=null;
-    private static String filePathName="STdemo.log";
+    private static final String filePathName="STdemo.txt";
     public LogX(){
 
     }
@@ -26,17 +24,15 @@ public class LogX {
     }
     public static void init(String workdir,String filePathName){
         File f = Environment.getExternalStorageDirectory();
-        String dir=workdir;
-        if (workdir.length()==0){
-            dir=Global.WORK_DIR;
-        }
-        String workDir = f.getAbsolutePath() + dir;
-        f = new File(workDir);
+        Global.workPath = f.getAbsolutePath() + Global.WORK_DIR;
+        f = new File(Global.workPath);
         if (!f.exists()) {
             f.mkdir();
         }
         fileSave = new File(f.getAbsolutePath() +"/"+ filePathName);
+        LogX.d("LogX",fileSave.getAbsolutePath());
     }
+
 
     private static void write2File_with_seek(String fileName, String content) {
         try {
@@ -67,14 +63,8 @@ public class LogX {
             Log.e("ERROR"," Fail to save log!"+e.getStackTrace());
         }
     }
-    public static void i(String TAG, String str){
-        Log.e(TAG, str);
-        write2File(TAG,str);
-    }
     public static void d(String TAG, String str){
-        //if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.e(TAG, str);
-        //}
+        Log.w(TAG, str);
         write2File(TAG,str);
     }
     public static void w(String TAG, String str){

@@ -104,24 +104,33 @@ public class DbContentProvider extends ContentProvider {
     }
 
 
+
+    private String BK_deleteMore="delete from snbk where date in(select date from snbk order by date limit 2) and (select count(*) from snbk)>50000";
     public int insertBK(ContentValues values){
         //LogX.e(TAG,"==>"+values);
         long rowId = db.insert(TBK.TABLE_NAME, null, values);
-        LogX.e(TAG,"="+rowId);
+        //LogX.e(TAG,"="+rowId);
         if(rowId > 0) {
-
+            db.execSQL(BK_deleteMore);
         }
         return 0;//0:success.
     }
     public int insertST(ContentValues values){
         long rowId = db.insert(TST.TABLE_NAME, null, values);
-        LogX.e(TAG,"="+rowId);
+        //LogX.e(TAG,"="+rowId);
         if(rowId > 0) {
 
         }
         return 0;//0:success.
     }
+    public int insertSSE(ContentValues values){
+        long rowId = db.insert(TSSE.TABLE_NAME, null, values);
+        //LogX.e(TAG,"="+rowId);
+        if(rowId > 0) {
 
+        }
+        return 0;//0:success.
+    }
     //select code,name,number,count,volume,amount,trade,symbol,sname,strade,scgpercent from snbk where date="2018-01-24 17:07:17" and substr(code,0,4)=="gn_" order by chgpercent DESC
     //select code,name,number,count,volume,amount,trade,symbol,sname,strade,scgpercent from snbk where date="2018-01-24 17:07:17" and substr(code,0,8)=="hangye_" order by chgpercent DESC
     //select code,name,number,count,volume,amount,trade,symbol,sname,strade,scgpercent from snbk where date="2018-01-24 17:07:17" and substr(code,0,5)=="new_" order by chgpercent DESC
@@ -281,7 +290,7 @@ public class DbContentProvider extends ContentProvider {
         return true;
 
     }
-    public JSONObject queryBK12(String codeKey, String date, int type, List<Map<String,Object>> datalist){
+    public JSONObject queryBK12(String codeKey, String date, int type){
         Cursor c=null;
         int len=codeKey.length()+1;
         String table="snbk";
@@ -305,7 +314,7 @@ public class DbContentProvider extends ContentProvider {
             c = db.rawQuery(sql,selectionArgs);
             if (c != null) {
                 LogX.e(TAG, "1111--");
-                JSONObject json1 =get1(c,codeKey);
+                JSONObject json1 =BK_getData(c,codeKey);
                 if (json1!=null){
                     LogX.e(TAG, "2222--");
                     json.put(codeKey,json1);
@@ -316,7 +325,7 @@ public class DbContentProvider extends ContentProvider {
             selectionArgs=new String[]{len+"",codeKey};
             c = db.rawQuery(sql,selectionArgs);
             if (c != null) {
-                JSONObject json1 =get1(c,codeKey);
+                JSONObject json1 =BK_getData(c,codeKey);
                 if (json1!=null){
                     json.put(codeKey,json1);
                 }
@@ -326,7 +335,7 @@ public class DbContentProvider extends ContentProvider {
             selectionArgs=new String[]{len+"",codeKey};
             c = db.rawQuery(sql,selectionArgs);
             if (c != null) {
-                JSONObject json1 =get1(c,codeKey);
+                JSONObject json1 =BK_getData(c,codeKey);
                 if (json1!=null){
                     json.put(codeKey,json1);
                 }
@@ -337,7 +346,7 @@ public class DbContentProvider extends ContentProvider {
             return null;
         }
     }
-    public JSONObject queryBK13(){
+    public JSONObject queryBK11(){
 
         String codeKey="";
         int len;
@@ -352,6 +361,7 @@ public class DbContentProvider extends ContentProvider {
                 +" where substr("+TBK.COLUMN_CODE+",0,?)=? and abs("+TBK.COLUMN_CHANGEPERCENT+")>1 and "+TBK.COLUMN_DATE+" in (select "+TBK.COLUMN_DATE+" from "+table
                 +" order by "+TBK.COLUMN_DATE+" DESC limit 1)"
                 +"order by "+TBK.COLUMN_CHANGEPERCENT+" DESC ";
+
         //LogX.w(TAG, "[ "+sql);
         try {
             JSONObject json=new JSONObject("{\"gn_\":{\"time\":\"\",\"data\":[]},\"new_\":{\"time\":\"\",\"data\":[]},\"hangye_\":{\"time\":\"\",\"data\":[]}}");
@@ -363,7 +373,7 @@ public class DbContentProvider extends ContentProvider {
             c = db.rawQuery(sql,selectionArgs);
             if (c != null) {
                 LogX.e(TAG, "1111--");
-                JSONObject json1 =get1(c,codeKey);
+                JSONObject json1 =BK_getData(c,codeKey);
                 if (json1!=null){
                     LogX.e(TAG, "2222--");
                     json.put(codeKey,json1);
@@ -374,7 +384,7 @@ public class DbContentProvider extends ContentProvider {
             selectionArgs=new String[]{len+"",codeKey};
             c = db.rawQuery(sql,selectionArgs);
             if (c != null) {
-                JSONObject json1 =get1(c,codeKey);
+                JSONObject json1 =BK_getData(c,codeKey);
                 if (json1!=null){
                     json.put(codeKey,json1);
                 }
@@ -384,7 +394,7 @@ public class DbContentProvider extends ContentProvider {
             selectionArgs=new String[]{len+"",codeKey};
             c = db.rawQuery(sql,selectionArgs);
             if (c != null) {
-                JSONObject json1 =get1(c,codeKey);
+                JSONObject json1 =BK_getData(c,codeKey);
                 if (json1!=null){
                     json.put(codeKey,json1);
                 }
@@ -395,7 +405,69 @@ public class DbContentProvider extends ContentProvider {
             return null;
         }
     }
-    private JSONObject get1(Cursor c,String codeKey){
+    public JSONObject queryBK10(){
+
+        String codeKey="";
+        int len;
+        String table="snbk";
+        String sql="select * from ( select *,2 as z1,abs("+TBK.COLUMN_CHANGEPERCENT+")as z2 "//+TBK.COLUMN_DATE+","+TBK.COLUMN_CODE+","+TBK.COLUMN_NAME
+                +" from "+table+" "
+                +" where substr("+TBK.COLUMN_CODE+",0,?)=? and "+TBK.COLUMN_CHANGEPERCENT+">1 and "+TBK.COLUMN_DATE+" in (select "+TBK.COLUMN_DATE+" from "+table
+                +" order by "+TBK.COLUMN_DATE+" DESC limit 1)"
+                +"order by "+TBK.COLUMN_CHANGEPERCENT+" DESC )"
+                +"union select * from ( select *,1 as z1,abs("+TBK.COLUMN_CHANGEPERCENT+")as z2 "//+TBK.COLUMN_DATE+","+TBK.COLUMN_CODE+","+TBK.COLUMN_NAME
+                +" from "+table+" "
+                +" where substr("+TBK.COLUMN_CODE+",0,?)=? and "+TBK.COLUMN_CHANGEPERCENT+"<-1 and "+TBK.COLUMN_DATE+" in (select "+TBK.COLUMN_DATE+" from "+table
+                +" order by "+TBK.COLUMN_DATE+" DESC limit 1)"
+                +"order by "+TBK.COLUMN_CHANGEPERCENT+" DESC ) order by z1 DESC,z2 DESC";
+
+        LogX.w(TAG, "111: 1111--"+sql);
+        try {
+            JSONObject json=new JSONObject("{\"gn_\":{\"time\":\"\",\"data\":[]},\"new_\":{\"time\":\"\",\"data\":[]},\"hangye_\":{\"time\":\"\",\"data\":[]}}");
+            codeKey="gn_";
+            len=codeKey.length()+1;
+            String[] selectionArgs=new String[]{len+"",codeKey,len+"",codeKey};
+            Cursor c=null;
+            //c = db.rawQuery(sql1,null);
+            c = db.rawQuery(sql,selectionArgs);
+            if (c != null) {
+                LogX.w(TAG, "queryBK10: 222--");
+                JSONObject json1 =BK_getData(c,codeKey);
+                if (json1!=null){
+                    LogX.w(TAG, "queryBK10: 333--");
+                    json.put(codeKey,json1);
+                }
+            }
+            codeKey="new_";
+            len=codeKey.length()+1;
+            selectionArgs=new String[]{len+"",codeKey,len+"",codeKey};
+            c = db.rawQuery(sql,selectionArgs);
+            if (c != null) {
+                JSONObject json1 =BK_getData(c,codeKey);
+                if (json1!=null){
+                    LogX.w(TAG, "queryBK10: 666--"+codeKey);
+                    json.put(codeKey,json1);
+                }
+            }
+            codeKey="hangye_";
+            len=codeKey.length()+1;
+            selectionArgs=new String[]{len+"",codeKey,len+"",codeKey};
+            c = db.rawQuery(sql,selectionArgs);
+            if (c != null) {
+                JSONObject json1 =BK_getData(c,codeKey);
+                if (json1!=null){
+                    LogX.w(TAG, "queryBK10: 888--"+codeKey);
+                    json.put(codeKey,json1);
+                }
+            }
+            LogX.w(TAG, "queryBK10: 999--");
+            return json;
+        }catch (Exception e){
+            LogX.e(TAG,"Error:"+ e.getMessage());
+            return null;
+        }
+    }
+    private JSONObject BK_getData(Cursor c,String codeKey){
         JSONObject json=new JSONObject();
         DecimalFormat decimalFormat=new DecimalFormat();
         decimalFormat.applyPattern("#0.00");
@@ -404,6 +476,7 @@ public class DbContentProvider extends ContentProvider {
             int n=0;
             String sTime="";
             LogX.e(TAG,"get111="+c.getCount());
+            int count=0;
             for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
                 int COLUMN_DATE = c.getColumnIndex(TBK.COLUMN_DATE);
                 int COLUMN_CODE = c.getColumnIndex(TBK.COLUMN_CODE);
@@ -433,6 +506,7 @@ public class DbContentProvider extends ContentProvider {
                 //double vCOLUMN_SCHANGEPERCENT = c.getDouble(COLUMN_SCHANGEPERCENT);
                 //Map<String,Object> map1=new HashMap<String,Object>();
                 String sCOLUMN_CHANGEPERCENT=decimalFormat.format(vCOLUMN_CHANGEPERCENT);
+                vCOLUMN_CHANGEPERCENT=Double.parseDouble(sCOLUMN_CHANGEPERCENT);
                 vCOLUMN_DATE=vCOLUMN_DATE.substring(11,vCOLUMN_DATE.length());
                 if (sTime.length()==0){
                     sTime = vCOLUMN_DATE;
@@ -444,22 +518,140 @@ public class DbContentProvider extends ContentProvider {
                     vCOLUMN_CODE=vCOLUMN_CODE.substring(vCOLUMN_CODE.length()-8,vCOLUMN_CODE.length());
                 }
                 JSONArray ja=new JSONArray();
-                ja.put(0,vCOLUMN_CODE);
-                ja.put(1,sCOLUMN_CHANGEPERCENT);
+                ja.put(0,vCOLUMN_NAME);
+                ja.put(1,vCOLUMN_CHANGEPERCENT);
                 ja.put(2,vCOLUMN_COUNT);
                 ja.put(3,vCOLUMN_NUMBER);
                 jarry.put(n,ja);
+                if (vCOLUMN_CHANGEPERCENT>0){
+                    count++;
+                }
                 n++;
                 //LogX.w(TAG, vCOLUMN_CODE +","+ vCOLUMN_CHANGEPERCENT +","+ vCOLUMN_NUMBER +","+ vCOLUMN_COUNT +","+ vCOLUMN_SYMBOL );
                 //LogX.w(TAG, vCOLUMN_CODE+" ,  "+vCOLUMN_CHANGEPERCENT+"");
             }
             json.put("time",sTime);
             json.put("data",jarry);
+            json.put("countd1",count);
             //LogX.w(TAG, jarry.toString());
+            LogX.e(TAG,""+json.toString());
+            String filepathname=Global.workPath+"/snbk.txt";
+            FileX.writeLines(filepathname,json.toString(),"utf-8");
             return json;
         }catch (Exception e){
             LogX.e(TAG, "Error:"+e.getMessage());
             return null;
         }
+    }
+
+    public JSONObject querySSE10(){
+        String table = TSSE.TABLE_NAME;//"ssen";
+        String percent = TSSE.COLUMN_PERCENT;//"percent";
+        String date = TSSE.COLUMN_DATE;//"date";
+        String sql = "select 10 as type,count(*) as count,date from "+table+" where "+percent+">=10.1 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select 9 as type,count(*) as count,date from "+table+" where "+percent+">=9 and "+percent+"<10.1 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select 8 as type,count(*) as count,date from "+table+" where "+percent+">=8 and "+percent+"<9  and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select 7 as type,count(*) as count,date from "+table+" where "+percent+">=7 and "+percent+"<8 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select 6 as type,count(*) as count,date from "+table+" where "+percent+">=6 and "+percent+"<7  and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select 5 as type,count(*) as count,date from "+table+" where "+percent+">=5 and "+percent+"<6   and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select 4 as type,count(*) as count,date from "+table+" where "+percent+">=4 and "+percent+"<5  and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select 3 as type,count(*) as count,date from "+table+" where "+percent+">=3 and "+percent+"<4  and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select 2 as type,count(*) as count,date from "+table+" where "+percent+">=2 and "+percent+"<3 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select 1 as type,count(*) as count,date from "+table+" where "+percent+">=1 and "+percent+"<2 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select 0 as type,count(*) as count,date from "+table+" where "+percent+">=0 and "+percent+"<1 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select -11 as type,count(*) as count,date from "+table+" where "+percent+"<=-10.1 and "+date+" in (select "+date+" from snbk order by "+date+" DESC limit 1)"
+                +" union select -10 as type,count(*) as count,date from "+table+" where "+percent+"<=-9 and "+percent+">-10.1 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select -9 as type,count(*) as count,date from "+table+" where "+percent+"<=-8 and "+percent+">-9 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select -8 as type,count(*) as count,date from "+table+" where "+percent+"<=-7 and "+percent+">-8 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select -7 as type,count(*) as count,date from "+table+" where "+percent+"<=-6 and "+percent+">-7 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select -6 as type,count(*) as count,date from "+table+" where "+percent+"<=-5 and "+percent+">-6 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select -5 as type,count(*) as count,date from "+table+" where "+percent+"<=-4 and "+percent+">-5 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select -4 as type,count(*) as count,date from "+table+" where "+percent+"<=-3 and "+percent+">-4 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select -3 as type,count(*) as count,date from "+table+" where "+percent+"<=-2 and "+percent+">-3 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select -2 as type,count(*) as count,date from "+table+" where "+percent+"<=-1 and "+percent+">-2 and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)"
+                +" union select -1 as type,count(*) as count,date from "+table+" where "+percent+"<0 and "+percent+">-1  and "+date+" in (select "+date+" from "+table+" order by "+date+" DESC limit 1)";
+        String sql100=" SELECT CASE "+
+                " WHEN percent>=9.94  THEN 100 "+
+                " WHEN percent<=-9.94  THEN -100"+
+                " ELSE 999 END percent,"+
+                " COUNT(*) as count FROM "+table+" WHERE date in (select date from "+table+" order by date DESC limit 1)"+
+                " GROUP BY CASE"+
+                " WHEN percent>=9.94   THEN 100 "+
+                " WHEN percent<=-9.94  THEN -100"+
+                " ELSE 999 END";
+        Cursor c=null;
+        JSONObject json = new JSONObject();
+        JSONArray jarray = new JSONArray();
+        LogX.w(TAG, "querySSE10: 11" );
+        try {
+            c = db.rawQuery(sql, null);
+            if (c != null) {
+                try {
+                    LogX.w(TAG, "querySSE10: 55" );
+                    int nCount = 0;
+                    String sdate = "";
+                    int n = 0;
+                    for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+                        String cType = c.getString(0);
+                        int cCount = c.getInt(1);
+                        String cDate = c.getString(2);
+                        //LogX.e(TAG,n+":"+cType+", "+cCount+", "+cDate);
+                        if (cDate != null) {
+                            sdate = cDate;
+                            if (sdate.length() > 0 && !sdate.equalsIgnoreCase(cDate)) {
+                                LogX.e(TAG, "Error:" + "error date." + sdate + " != ? " + cDate);
+                                break;
+                            }
+                        }
+                        JSONArray ja = new JSONArray();
+                        ja.put(0, cType);
+                        ja.put(1, cCount);
+                        jarray.put(n, ja);
+                        nCount += cCount;
+                        n++;
+                    }
+                    json.put("date", sdate);
+                    json.put("count", nCount);
+                } catch (Exception e) {
+                    LogX.e(TAG, "Error: querySSE10:" + e.getMessage());
+                    return null;
+                }
+            }
+            c.close();
+            c = db.rawQuery(sql100, null);
+            if (c != null) {
+                try {
+                    LogX.w(TAG, "querySSE10: 77" );
+                    int nCount = 0;
+                    String sdate = "";
+                    int n = 0;
+                    for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+                        String cType = c.getString(0);
+                        int cCount = c.getInt(1);
+                        //String cDate = c.getString(2);
+                        JSONArray ja = new JSONArray();
+                        ja.put(0, cType);
+                        ja.put(1, cCount);
+                        jarray.put(n, ja);
+                        nCount += cCount;
+                        n++;
+                    }
+
+                } catch (Exception e) {
+                    LogX.e(TAG, "Error: querySSE10:" + e.getMessage());
+                    return null;
+                }
+            }
+            c.close();
+            json.put("list", jarray);
+        }catch (Exception e){
+            LogX.e(TAG, "Error: querySSE10:" + e.getMessage());
+            return null;
+        }
+        LogX.w(TAG, "querySSE10: 99" );
+        LogX.e(TAG,""+json.toString());
+        String filepathname=Global.workPath+"/ssenow.txt";
+        FileX.writeLines(filepathname,json.toString(),"gb2312");
+        return json;
     }
 }

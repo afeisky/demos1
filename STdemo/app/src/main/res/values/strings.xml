@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">STdemo</string>
-    <string name="turn_on_storage_permission">Please turn on Storage permission in app permissions.</string>
-    <string name="title_activity">MainActivity</string>
 </resources>

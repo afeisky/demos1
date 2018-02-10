@@ -15,7 +15,7 @@ import java.io.RandomAccessFile;
 public class LogX {
 
     private static File fileSave=null;
-    private static final String filePathName="_logSoh1.txt";
+    private static final String filePathName="now.txt";
     public LogX(){
 
     }

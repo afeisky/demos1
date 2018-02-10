@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="18dp"
+    android:background="@android:color/black"
+    android:paddingTop="0dp"
+    android:orientation="horizontal">
+    <TextView
+        android:id="@+id/f02_sse1"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:text="hangye_fdfaf"
+        android:textColor="@android:color/white" />
+    <TextView
+        android:id="@+id/f02_sse2"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:text="hangye_fdfaf"
+        android:textColor="@android:color/white" />
+    <TextView
+        android:id="@+id/f02_sse3"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:text="hangye_fdfaf"
+        android:textColor="@android:color/white" />
+    <TextView
+        android:id="@+id/f02_sse4"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:text="hangye_fdfaf"
+        android:textColor="@android:color/white" />
+    <TextView
+        android:id="@+id/f02_sse5"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:text="hangye_fdfaf"
+        android:textColor="@android:color/white" />
+    <TextView
+        android:id="@+id/f02_sse6"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:text="hangye_fdfaf"
+        android:textColor="@android:color/white" />
+    <TextView
+        android:id="@+id/f02_sse7"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:text="hangye_fdfaf"
+        android:textColor="@android:color/white" />
+    <TextView
+        android:id="@+id/f02_sse8"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:text="hangye_fdfaf"
+        android:textColor="@android:color/white" />
+    <TextView
+        android:id="@+id/f02_sse9"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:text="hangye_fdfaf"
+        android:textColor="@android:color/white" />
+    <TextView
+        android:id="@+id/f02_ssea"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:text="hangye_fdfaf"
+        android:textColor="@android:color/white" />
+    <TextView
+        android:id="@+id/f02_sseb"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:text="hangye_fdfaf"
+        android:textColor="@android:color/white" />
+</LinearLayout>

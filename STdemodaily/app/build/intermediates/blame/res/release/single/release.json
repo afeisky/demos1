@@ -1,0 +1,86 @@
+[
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/layout_activity_main.xml.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/layout/activity_main.xml"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/mipmap-hdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/drawable_progresspatch_blue.9.png.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/drawable/progresspatch_blue.9.png"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/drawable_progress_patch_galy.9.png.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/drawable/progress_patch_galy.9.png"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/drawable_progressbar_horizontal_1.xml.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/drawable/progressbar_horizontal_1.xml"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/drawable_ic_launcher_background.xml.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/drawable-v24_ic_launcher_foreground.xml.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/drawable-v24/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/layout_notification.xml.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/layout/notification.xml"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/drawable_progress_patch_green.9.png.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/drawable/progress_patch_green.9.png"
+    },
+    {
+        "merged": "/disk1/androidstudio3/workspace/STdemodaily/app/build/intermediates/res/merged/release/drawable_ic_launcher.png.flat",
+        "source": "/disk1/androidstudio3/workspace/STdemodaily/app/src/main/res/drawable/ic_launcher.png"
+    }
+]

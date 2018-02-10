@@ -124,14 +124,37 @@ public class SqliteHelper extends SQLiteOpenHelper {
             TST.COLUMN_URL + " varchar(50), " +
             TST.COLUMN_CREATE + " varchar(20), "+
             " Primary Key("+TST.COLUMN_DATE+","+TST.COLUMN_CODE+")  )";
+
+
+    private static final String SQL_CRESTE_SSE = "CREATE TABLE IF NOT EXISTS " + TSSE.TABLE_NAME +
+            " (" +
+            TSSE.COLUMN_CODE + " varchar(10), " +
+            TSSE.COLUMN_DATE + " varchar(20), " +
+            TSSE.COLUMN_NAME + " varchar(30), " +
+            TSSE.COLUMN_BEGIN + " decimal(3), " +
+            TSSE.COLUMN_NOW + " decimal(3), " +
+            TSSE.COLUMN_PRICE + " decimal(3), " +
+            TSSE.COLUMN_HIGH + " decimal(3), " +
+            TSSE.COLUMN_LOW + " decimal(3), " +
+            TSSE.COLUMN_GAP + " decimal(3), " +
+            TSSE.COLUMN_VOLUME + " decimal(3), " +
+            TSSE.COLUMN_MONEY + " decimal(3), " +
+            TSSE.COLUMN_PERCENT + " decimal(3), " +
+            TSSE.COLUMN_NOTE + " varchar(10), " +
+            TSSE.COLUMN_URL + " varchar(50), " +
+            TSSE.COLUMN_CREATE + " varchar(20) )";
+            //TSSE.COLUMN_CREATE + " varchar(20), "+
+            //" Primary Key("+TST.COLUMN_DATE+","+TST.COLUMN_CODE+")  )";
     private int createTable(SQLiteDatabase db){
         LogX.e(TAG,"==>"+SQL_CRESTE_BK);
         LogX.e(TAG,"==>"+SQL_CRESTE_ST);
+        LogX.e(TAG,"==>"+SQL_CRESTE_SSE);
         if (db==null){
             LogX.e(TAG,"==>db is null");
         }
         db.execSQL(SQL_CRESTE_BK);
         db.execSQL(SQL_CRESTE_ST);
+        db.execSQL(SQL_CRESTE_SSE);
         return 0;//0:success.
     }
     public void onCreate(SQLiteDatabase db) {

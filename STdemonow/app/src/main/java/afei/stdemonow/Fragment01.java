@@ -89,7 +89,7 @@ public class Fragment01 extends android.support.v4.app.Fragment {
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setUseWideViewPort(false);
         webSettings.setLoadWithOverviewMode(false);
-        //start();
+        start();
     }
 
     private DatePickerDialog.OnDateSetListener onDateSetListenerFrom = new DatePickerDialog.OnDateSetListener() {
@@ -106,15 +106,16 @@ public class Fragment01 extends android.support.v4.app.Fragment {
     };
     private void start(){
         LogX.w(TAG, "start");
-        IntentFilter filter = new IntentFilter(BootupReceiver.ACTION_UPDATE_UI);
-        getActivity().registerReceiver(broadcastReceiver, filter);
+        //IntentFilter filter = new IntentFilter(BootupReceiver.ACTION_UPDATE_UI);
+        //getActivity().registerReceiver(broadcastReceiver, filter);
 
         //new HistDown().start(this.getApplicationContext(),editFrom.getText().toString(),editTo.getText().toString());
         //new ParseBK().start(this.getApplicationContext());
-        //new NowDown1().start(this.getApplicationContext());
+        //new NowDown().start(this.getApplicationContext());
         //new Input2db().start(this.getApplicationContext());
-        Intent intent =new Intent(BootupReceiver.ACTION_BOOT);
-        getActivity().getApplicationContext().sendBroadcast(intent);
+        //Intent intent =new Intent(BootupReceiver.ACTION_BOOT);
+        //getActivity().getApplicationContext().sendBroadcast(intent);
+        new DownLHB(getActivity().getApplicationContext()).start();
     }
     private void startTimerService(Context context, String tagAction){
         Intent intentService=new Intent(context, TimerService.class);

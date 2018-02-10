@@ -1,0 +1,4 @@
+#Sat Jan 13 12:05:39 CST 2018
+base.0=/disk1/androidstudio3/workspace/STdemoHistory/app/build/intermediates/transforms/dexMerger/debug/8
+renamed.0=classes.dex
+file.0=/disk1/androidstudio3/workspace/STdemoHistory/app/build/intermediates/transforms/dexMerger/debug/8/classes.dex

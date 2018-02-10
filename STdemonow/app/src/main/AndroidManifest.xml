@@ -41,6 +41,7 @@
                 <action android:name="android.net.wifi.STATE_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
                 <action android:name="afei.stdemonow.boot" />
+                <action android:name="afei.stdemonow.download_temp"/>
             </intent-filter>
         </receiver>
     </application>

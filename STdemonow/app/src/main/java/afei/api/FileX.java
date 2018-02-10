@@ -3,9 +3,11 @@ package afei.api;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 /**
@@ -98,16 +100,28 @@ public class FileX {
             }
             return resultString;
         } catch (IOException e) {
-            e.printStackTrace();
+            e.getMessage();
         }finally {
             try {
                 if (is!=null)
                     is.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                e.getMessage();
             }
         }
         return "";
     }
+    public static boolean writeLines(String filePathName,String lines,String encode){
+        File f=new File(filePathName);
+        try {
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(filePathName), encode);
+            out.write(lines);
+            out.close();
+            return true;
+        }catch (Exception e){
+            e.getMessage();
+            return false;
+        }
 
+    }
 }

@@ -5,16 +5,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +37,7 @@ public class Fragment02 extends android.support.v4.app.Fragment {
     private TextView mMessageView;
     private ListView listview_bk_now;
     private Button btnDown;
-    private List<Map<String, Object>> datalist=new ArrayList<Map<String, Object>>();
+    //private List<Map<String, Object>> datalist=new ArrayList<Map<String, Object>>();
     private List<BK> list=new ArrayList<BK>();
 
     @Override
@@ -46,13 +45,14 @@ public class Fragment02 extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         View mView = inflater.inflate(R.layout.fragment2a, container, false);
         LogX.e(TAG, "fragmemt02  onCreateView()");
-        init(mView);
+        //init(mView);
         return mView;
     }
 
     public void init(View mView) {
-        mMessageView = (TextView) mView.findViewById(R.id.txtbknow);
         listview_bk_now = (ListView) mView.findViewById(R.id.listview_bk_now);
+        mMessageView = (TextView) mView.findViewById(R.id.f02_sse_txt);
+        mMessageView.setText("");
         btnDown = (Button) mView.findViewById(R.id.btnbknow);
         btnDown.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,13 +73,13 @@ public class Fragment02 extends android.support.v4.app.Fragment {
                 // TODO: Implement this method
                 switch (p3) {
                     case 0:
-                        Toast.makeText(getActivity(), "1", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "1", Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
-                        Toast.makeText(getActivity(), "2", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "2", Toast.LENGTH_SHORT).show();
                         break;
                     case 2:
-                        Toast.makeText(getActivity(), "3", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "3", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -94,137 +94,205 @@ public class Fragment02 extends android.support.v4.app.Fragment {
     private SimpleDateFormat HHmmss = new SimpleDateFormat("HH:mm:ss");
 
     private void getData() {
-
         if (true) {
             try {
-                JSONObject json = Global.getContentProvider().queryBK13();//2("gn_", "", 0, datalist);
-                //LogX.w(TAG,json.toString());
-                JSONObject js_gn = json.getJSONObject("gn_");
-                JSONObject js_new = json.getJSONObject("new_");
-                JSONObject js_hy = json.getJSONObject("hangye_");
-                JSONArray ja_gn = js_gn.getJSONArray("data");
-                JSONArray ja_new = js_new.getJSONArray("data");
-                JSONArray ja_hy = js_hy.getJSONArray("data");
-                String timeNow = js_gn.getString("time");
-                int gn_len = ja_gn.length();
-                int mew_len = ja_new.length();
-                int hy_len = ja_hy.length();
-                LogX.e(TAG, "len=" + gn_len + "," + mew_len + "," + hy_len);
-                if (true) {
+                JSONObject json=null;
+                json = Global.getContentProvider().querySSE10();
+                LogX.w(TAG, "====111");
+                LogX.w(TAG, "=" + json.toString());
+                String html="";
+                if (json!=null && json.toString().length()>10){
+                    JSONArray js = json.getJSONArray("list");
+                    String sdate = json.getString("date");
+                    int count = json.getInt("count");
+                    for (int i=js.length()-1;i>=0;i--) {
+                        JSONArray one = js.getJSONArray(i);
+                        if (one.getInt(1)>0) {
+                            if (i<js.length()-1){
+                                html+=";";
+                            }
+                            if (i==js.length()/2-1){
+                                html+="<br>";
+                            }
+                            String read1="";
+                            String read2="";
+                            if (one.getInt(0)>=0) {
+                                read1 = "<font color='#FF0000'>";
+                            }else{
+                                read1 = "<font color='#00FF00'>";
+                            }
+                            String w1 = "<font color='#FFFFFF'>";
+                            String w2 = "</font>";
+                            html += w1+one.getString(0) + ":"+w2+read1 + one.getString(1)+w2;
+                        }
+                    }
+                }
+                LogX.w(TAG, "====222"+html);
+                mMessageView.setText(Html.fromHtml(html,Html.FROM_HTML_MODE_LEGACY));
+
+                json = Global.getContentProvider().queryBK10();//2("gn_", "", 0, datalist);
+                if (json!=null && json.toString().length()>10) {
+                    //LogX.w(TAG,json.toString());
+                    JSONObject js_gn = json.getJSONObject("gn_");
+                    JSONObject js_new = json.getJSONObject("new_");
+                    JSONObject js_hy = json.getJSONObject("hangye_");
+                    JSONArray ja_gn = js_gn.getJSONArray("data");
+                    JSONArray ja_new = js_new.getJSONArray("data");
+                    JSONArray ja_hy = js_hy.getJSONArray("data");
+                    String timeNow = js_gn.getString("time");
+                    int gn_len = ja_gn.length();
+                    int new_len = ja_new.length();
+                    int hy_len = ja_hy.length();
+                    LogX.e(TAG, "len=" + gn_len + "," + new_len + "," + hy_len);
                     JSONArray ja = null;
-                    Map<String, Object> m = new HashMap<String, Object>();
-                    LogX.e(TAG, "=" + js_gn.toString());
-                    for (int i = 0; i < gn_len; i++) {
-                        m = new HashMap<String, Object>();
-                        ja = ja_gn.getJSONArray(i);
-                        m.put("1", ja.get(0));
-                        m.put("2", ja.get(1));
-                        datalist.add(m);
-                        BK bk=new BK();
-                        bk.a1=ja.get(0).toString();
-                        bk.a2=ja.get(1).toString().trim();
-                        bk.percent=Double.parseDouble(ja.get(1).toString().trim());
-                        bk.count=Integer.parseInt(ja.get(2).toString().trim());
-                        bk.number=Integer.parseInt(ja.get(3).toString().trim());
-                        list.add(bk);
-                    }
-                    m.put("1", "-------");
-                    m.put("2", "------");
-                    for (int i = 0; i < mew_len; i++) {
-                        m = new HashMap<String, Object>();
-                        ja = ja_new.getJSONArray(i);
-                        m.put("1", ja.get(0));
-                        m.put("2", ja.get(1));
-                        datalist.add(m);
-                        BK bk=new BK();
-                        bk.a1=ja.get(0).toString();
-                        bk.a2=ja.get(1).toString().trim();
-                        bk.percent=Double.parseDouble(ja.get(1).toString().trim());
-                        bk.count=Integer.parseInt(ja.get(2).toString().trim());
-                        bk.number=Integer.parseInt(ja.get(3).toString().trim());
-
-                        list.add(bk);
-                    }
-                    m.put("1", "-------");
-                    m.put("2", "------");
-                    datalist.add(m);
-                    for (int i = 0; i < hy_len; i++) {
-                        m = new HashMap<String, Object>();
-                        ja = ja_hy.getJSONArray(i);
-                        m.put("1", ja.get(0));
-                        m.put("2", ja.get(1));
-                        datalist.add(m);
-                        BK bk=new BK();
-                        bk.a1=ja.get(0).toString();
-                        bk.a2=ja.get(1).toString().trim();
-                        bk.percent=Double.parseDouble(ja.get(1).toString().trim());
-                        bk.count=Integer.parseInt(ja.get(2).toString().trim());
-                        bk.number=Integer.parseInt(ja.get(3).toString().trim());
-
-                        list.add(bk);
-                    }
-
-                    LogX.e(TAG, "list.size()= "+list.size());
-                } else {
-                    int max = gn_len > mew_len ? gn_len : mew_len;
-                    max = max > hy_len ? max : hy_len;
-                    JSONArray ja = null;
-                    for (int i = 0; i < max; i++) {
-                        Map<String, Object> m = new HashMap<String, Object>();
-                        if (ja_gn.length() > i) {
-                            ja = ja_gn.getJSONArray(i);
-                            m.put("1", ja.get(0));
-                            m.put("2", ja.get(1));
+                    //LogX.e(TAG, "=" + js_gn.toString());
+                    BK bk = new BK();
+                    bk.a1 = js_gn.getString("time");
+                    bk.b1 = js_new.getString("time");
+                    bk.c1 = js_hy.getString("time");
+                    list.add(bk);
+                    if (false) {
+                        for (int i = 0; i < gn_len; i++) {
+                            bk = new BK();
+                            bk.key = 1;
+                            bk.a1 = ja.get(0).toString();
+                            bk.a2 = ja.get(1).toString().trim();
+                            bk.percent = Double.parseDouble(ja.get(1).toString().trim());
+                            bk.count = Integer.parseInt(ja.get(2).toString().trim());
+                            bk.number = Integer.parseInt(ja.get(3).toString().trim());
+                            list.add(bk);
                         }
-                        if (ja_new.length() > i) {
-                            ja = ja_new.getJSONArray(i);
-                            m.put("11", ja.get(0));
-                            m.put("12", ja.get(1));
+                        for (int i = 0; i < new_len; i++) {
+
+                            bk = new BK();
+                            bk.key = 2;
+                            bk.a1 = ja.get(0).toString();
+                            bk.a2 = ja.get(1).toString().trim();
+                            bk.percent = Double.parseDouble(ja.get(1).toString().trim());
+                            bk.count = Integer.parseInt(ja.get(2).toString().trim());
+                            bk.number = Integer.parseInt(ja.get(3).toString().trim());
+                            list.add(bk);
                         }
-                        if (ja_hy.length() > i) {
-                            ja = ja_hy.getJSONArray(i);
-                            m.put("21", ja.get(0));
-                            m.put("22", ja.get(1));
+                        for (int i = 0; i < hy_len; i++) {
+                            bk = new BK();
+                            bk.key = 3;
+                            bk.a1 = ja.get(0).toString();
+                            bk.a2 = ja.get(1).toString().trim();
+                            bk.percent = Double.parseDouble(ja.get(1).toString().trim());
+                            bk.count = Integer.parseInt(ja.get(2).toString().trim());
+                            bk.number = Integer.parseInt(ja.get(3).toString().trim());
+                            list.add(bk);
                         }
-                        datalist.add(m);
+
+                        //LogX.e(TAG, "list.size()= "+list.size());
+                    } else if (true) {
+                        int max = gn_len > new_len ? gn_len : new_len;
+                        max = max > hy_len ? max : hy_len;
+                        for (int i = 0; i < max; i++) {
+                            bk = new BK();
+                            bk.key = 1;
+                            if (ja_gn.length() > i) {
+                                ja = ja_gn.getJSONArray(i);
+                                bk.a1 = ja.get(0).toString();
+                                bk.a2 = ja.get(1).toString().trim();
+                                bk.a3 = Double.parseDouble(ja.get(1).toString().trim());
+                            }
+                            if (ja_new.length() > i) {
+                                ja = ja_new.getJSONArray(i);
+                                bk.b1 = ja.get(0).toString();
+                                bk.b2 = ja.get(1).toString().trim();
+                                bk.b3 = Double.parseDouble(ja.get(1).toString().trim());
+                            }
+                            if (ja_hy.length() > i) {
+                                ja = ja_hy.getJSONArray(i);
+                                bk.c1 = ja.get(0).toString();
+                                bk.c2 = ja.get(1).toString().trim();
+                                bk.c3 = Double.parseDouble(ja.get(1).toString().trim());
+                            }
+                            list.add(bk);
+                        }
+                    } else {
+                        int max = gn_len > new_len ? gn_len : new_len;
+                        max = max > hy_len ? max : hy_len;
+                        int gn_countd1 = js_gn.getInt("countd1");
+                        int mew_countd1 = js_new.getInt("countd1");
+                        int hy_countd1 = js_hy.getInt("countd1");
+                        int max_countd1 = gn_countd1 > mew_countd1 ? gn_countd1 : mew_countd1;
+                        max_countd1 = max_countd1 > hy_countd1 ? max_countd1 : hy_countd1;
+                        LogX.e(TAG, "gn_countd1= " + gn_countd1);
+                        LogX.e(TAG, "max_countd1= " + max_countd1);
+                        LogX.e(TAG, "max_countd1-hy_countd1= " + (max_countd1 - hy_countd1));
+                        for (int i = 0; i < max_countd1; i++) {
+                            bk = new BK();
+                            bk.key = 1;
+                            if (i >= max_countd1 - gn_countd1) {
+                                ja = ja_gn.getJSONArray(i - (max_countd1 - gn_countd1));
+                                bk.a1 = ja.get(0).toString();
+                                bk.a2 = ja.get(1).toString().trim();
+                                bk.a3 = Double.parseDouble(ja.get(1).toString().trim());
+                            }
+                            if (i >= max_countd1 - mew_countd1) {
+                                ja = ja_new.getJSONArray(i - (max_countd1 - mew_countd1));
+                                bk.b1 = ja.get(0).toString();
+                                bk.b2 = ja.get(1).toString().trim();
+                                bk.b3 = Double.parseDouble(ja.get(1).toString().trim());
+                            }
+                            if (i >= max_countd1 - hy_countd1) {
+                                ja = ja_hy.getJSONArray(i - (max_countd1 - hy_countd1));
+                                bk.c1 = ja.get(0).toString();
+                                bk.c2 = ja.get(1).toString().trim();
+                                bk.c3 = Double.parseDouble(ja.get(1).toString().trim());
+                            }
+                            list.add(bk);
+                        }
+                        int gn_countd12 = gn_len - gn_countd1;
+                        int mew_countd12 = new_len - mew_countd1;
+                        int hy_countd12 = hy_len - hy_countd1;
+                        max_countd1 = gn_countd12 > mew_countd12 ? gn_countd12 : mew_countd12;
+                        max_countd1 = max_countd1 > hy_countd12 ? max_countd1 : hy_countd12;
+                        LogX.e(TAG, "gn_countd12= " + gn_countd12);
+                        LogX.e(TAG, "max_countd1= " + max_countd1);
+                        for (int i = 0; i < max_countd1; i++) {
+                            bk = new BK();
+                            bk.key = 2;
+                            if (i < gn_countd12) {
+                                ja = ja_gn.getJSONArray(i + gn_countd1);
+                                bk.a1 = ja.get(0).toString();
+                                bk.a2 = ja.get(1).toString().trim();
+                                bk.a3 = Double.parseDouble(ja.get(1).toString().trim());
+                            }
+                            if (i < mew_countd12) {
+                                ja = ja_new.getJSONArray(i + mew_countd1);
+                                bk.b1 = ja.get(0).toString();
+                                bk.b2 = ja.get(1).toString().trim();
+                                bk.b3 = Double.parseDouble(ja.get(1).toString().trim());
+                            }
+                            if (i < hy_countd12) {
+                                ja = ja_hy.getJSONArray(i + hy_countd1);
+                                bk.c1 = ja.get(0).toString();
+                                bk.c2 = ja.get(1).toString().trim();
+                                bk.c3 = Double.parseDouble(ja.get(1).toString().trim());
+                            }
+                            list.add(bk);
+                        }
                     }
                 }
                 return;
             } catch (Exception e) {
                 LogX.e(TAG, "Error: " + e.getMessage());
+
             }
-
+            return;
         }
-        String timeNow = HHmmss.format(new Date());
-        Map<String, Object> map1 = new HashMap<String, Object>();
-        map1.put("time", timeNow);
-        map1.put("code", "gn_afdfaaa");
-        map1.put("percent", "5.343");
-        Map<String, Object> map2 = new HashMap<String, Object>();
-        map2.put("time", timeNow);
-        map2.put("code", "gn_afdf333");
-        map2.put("percent", "4.343");
-        Map<String, Object> map3 = new HashMap<String, Object>();
 
-        map3.put("time", timeNow);
-        map3.put("code", "gn_afdf%%tt");
-        map3.put("percent", "2.343");
-        Map<String, Object> map4 = new HashMap<String, Object>();
-        //map4.put("image",R.mipmap.ic_launcher);
-        map4.put("time", timeNow);
-        map4.put("code", "gn_afdffdsfa");
-        map4.put("percent", "-1.343");
-
-        datalist.add(map1);
-        datalist.add(map2);
-        datalist.add(map3);
-        datalist.add(map4);
-
-        LogX.e(TAG, "--refresh--->");
+        //Map<String, Object> map1 = new HashMap<String, Object>();
+        //map1.put("time", timeNow);
+        //map1.put("code", "gn_afdfaaa");
     }
 
     private void refresh() {
-        datalist.clear();
+        LogX.e(TAG, "--refresh--->");
+        list.clear();
         getData();
         sa.notifyDataSetChanged();
     }
@@ -260,10 +328,17 @@ public class Fragment02 extends android.support.v4.app.Fragment {
     }
 
     public class BK {
-        private String a1;
-        private String a2;
-        private String a3;
-        private Double percent;
+        private int key;
+        private String a1="";
+        private String a2="";
+        private Double a3=0.0;//percent
+        private String b1="";
+        private String b2="";
+        private Double b3=0.0;//percent
+        private String c1="";
+        private String c2="";
+        private Double c3=0.0;
+        private Double percent=0.0;
         private int count;
         private int number;
     }
@@ -278,7 +353,7 @@ public class Fragment02 extends android.support.v4.app.Fragment {
         @Override
         public int getCount() {
             // TODO Auto-generated method stub
-            return datalist.size();
+            return list.size();
         }
 
         @Override
@@ -302,27 +377,45 @@ public class Fragment02 extends android.support.v4.app.Fragment {
                 convertView = mInflater.inflate(R.layout.fragment2aitem, null);
                 holder.a1 = (TextView) convertView.findViewById(R.id.f02_a1);
                 holder.a2 = (TextView) convertView.findViewById(R.id.f02_a2);
-                holder.a3 = (TextView) convertView.findViewById(R.id.f02_a3);
-                holder.pb = (ProgressBar) convertView.findViewById(R.id.f02_a4);
+
+                holder.b1 = (TextView) convertView.findViewById(R.id.f02_b1);
+                holder.b2 = (TextView) convertView.findViewById(R.id.f02_b2);
+                holder.c1 = (TextView) convertView.findViewById(R.id.f02_c1);
+                holder.c2 = (TextView) convertView.findViewById(R.id.f02_c2);
+                //holder.pb = (ProgressBar) convertView.findViewById(R.id.f02_a14);
 
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-
             BK bk=list.get(position);
             //holder.img.setImageResource(R.drawable.ic_launcher);
             holder.a1.setText(bk.a1);
             holder.a2.setText(bk.a2);
-            if (bk.percent>0) {
-                holder.a2.setTextColor(Color.RED);//Color.rgb(255, 255, 255)); Color.parseColor("#FF0000"));
+            holder.b1.setText(bk.b1);
+            holder.b2.setText(bk.b2);
+            holder.c1.setText(bk.c1);
+            holder.c2.setText(bk.c2);
+            if (true) {
+                holder.a2.setTextColor(bk.a3>0?Color.RED:Color.GREEN);//Color.rgb(255, 255, 255)); Color.parseColor("#FF0000"));
+                holder.b2.setTextColor(bk.b3>0?Color.RED:Color.GREEN);
+                holder.c2.setTextColor(bk.c3>0?Color.RED:Color.GREEN);
             }else{
-                holder.a2.setTextColor(Color.GREEN);//Color.rgb(255, 255, 255));
+                if (bk.key < 2) {
+                    holder.a2.setTextColor(Color.RED);//Color.rgb(255, 255, 255)); Color.parseColor("#FF0000"));
+                    holder.b2.setTextColor(Color.RED);
+                    holder.c2.setTextColor(Color.RED);
+                } else {
+                    holder.a2.setTextColor(Color.GREEN);//Color.rgb(255, 255, 255));
+                    holder.b2.setTextColor(Color.GREEN);
+                    holder.c2.setTextColor(Color.GREEN);
+                }
             }
-            holder.a3.setText(bk.count+"/"+bk.number);
-            holder.pb.setProgress(5);
+
+            //holder.a3.setText(position+" , "+bk.count+"/"+bk.number);
+            //holder.pb.setProgress(5);
             //holder.pb.setProgress(bk.count/3*100/bk.number);
-            holder.pb.setSecondaryProgress(1);
+            //holder.pb.setSecondaryProgress(1);
             //holder.speaker.setOnClickListener(new OnClickListener(){
             //    @Override
             //    public void onClick(View v) {
@@ -339,6 +432,10 @@ public class Fragment02 extends android.support.v4.app.Fragment {
         public TextView a1;
         public TextView a2;
         public TextView a3;
+        public TextView b1;
+        public TextView b2;
+        public TextView c1;
+        public TextView c2;
         public ProgressBar pb;
     }
 
