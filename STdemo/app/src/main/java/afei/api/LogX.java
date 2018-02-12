@@ -26,11 +26,15 @@ public class LogX {
         File f = Environment.getExternalStorageDirectory();
         Global.workPath = f.getAbsolutePath() + Global.WORK_DIR;
         f = new File(Global.workPath);
-        if (!f.exists()) {
+        if (f==null) {
             f.mkdir();
         }
-        fileSave = new File(f.getAbsolutePath() +"/"+ filePathName);
-        LogX.d("LogX",fileSave.getAbsolutePath());
+        if (f.exists()) {
+            fileSave = new File(f.getAbsolutePath() +"/"+ filePathName);
+            Log.d("LogX",fileSave.getAbsolutePath());
+        }else{
+            Log.e("LogX","Error: not create dir "+f.getAbsolutePath());
+        }
     }
 
 

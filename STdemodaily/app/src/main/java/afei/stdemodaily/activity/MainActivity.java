@@ -13,11 +13,13 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -33,11 +35,13 @@ import afei.stdemodaily.dailydown.DailyReceiver;
 import afei.api.LogX;
 import afei.stdemodaily.dailydown.DailyService;
 
+import static android.text.Html.FROM_HTML_MODE_LEGACY;
+
 
 public class MainActivity extends Activity  {
     private static final String TAG = "STdemodaily:MainActivity";
 
-    private WebView mWebView;
+    private EditText mEditText;
     private View mLoading;
     private Intent mIntent;
     private TextView mMessageView;
@@ -50,7 +54,7 @@ public class MainActivity extends Activity  {
         setContentView(R.layout.activity_main);
         mMessageView = (TextView) findViewById(R.id.download_message);
         mProgressbar = (ProgressBar) findViewById(R.id.download_progress);
-        mWebView= (WebView) findViewById(R.id.webView1);
+        mEditText= (EditText) findViewById(R.id.editText);
         btnDown = (Button) findViewById(R.id.download_btn);
         btnDown.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,9 +77,9 @@ public class MainActivity extends Activity  {
             LogX.w(TAG, "----Game Over!");
         }
 
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setUseWideViewPort(false);
-        webSettings.setLoadWithOverviewMode(false);
+        //WebSettings webSettings = mWebView.getSettings();
+        //webSettings.setUseWideViewPort(false);
+        //webSettings.setLoadWithOverviewMode(false);
 
     }
 /*
@@ -194,7 +198,9 @@ public class MainActivity extends Activity  {
                     for (int i = 0; i < lines.size(); i++) {
                         str += lines.get(i);
                     }
-                    mWebView.loadData(str, "text/html", "utf8");
+                    //mWebView.loadData(str, "text/html", "utf8");
+                    mEditText.setText(Html.fromHtml(str,FROM_HTML_MODE_LEGACY));
+
 
                 }
                 LogX.w(TAG, str);
@@ -248,7 +254,8 @@ public class MainActivity extends Activity  {
                     } else {
                         requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_CODE);
                         LogX.w(TAG, "READ_EXTERNAL_STORAGE--5-");
-                        mWebView.loadData("Please set app right!", "text/html", "utf8");
+                        //mWebView.loadData("Please set app right!", "text/html", "utf8");
+                        mEditText.setText(Html.fromHtml("Please set app right!",FROM_HTML_MODE_LEGACY));
                     }
                 }
             }
@@ -258,7 +265,7 @@ public class MainActivity extends Activity  {
     @Override
     protected void onDestroy() {
         LogX.w(TAG, "onDestroy()-1");
-        mWebView.destroy();
+        //mWebView.destroy();
         stopService();
         unregisterReceiver(broadcastReceiver);
         super.onDestroy();

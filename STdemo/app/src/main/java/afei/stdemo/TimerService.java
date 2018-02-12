@@ -125,7 +125,7 @@ public class TimerService extends Service {
     NotificationManager notificationManager = null;
 
     private void notify1(){
-        LogX.e(TAG, "notify1() "+this.getPackageName()+","+getText(R.string.app_name));
+        LogX.d(TAG, "notify1() "+this.getPackageName()+","+getText(R.string.app_name));
         CharSequence title = getText(R.string.app_name);
         Intent intent = new Intent(this, MainActivity.class);
         intent.setAction(Intent.ACTION_MAIN);

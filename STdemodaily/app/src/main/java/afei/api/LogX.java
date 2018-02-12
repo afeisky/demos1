@@ -32,7 +32,7 @@ public class LogX {
         }
         String workDir = f.getAbsolutePath() + dir;
         f = new File(workDir);
-        if (!f.exists()) {
+        if (f==null) {//if (f.exists()) {
             f.mkdir();
         }
         fileSave = new File(f.getAbsolutePath() +"/"+ filePathName);
