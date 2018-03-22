@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
             sendBroadcast(it);
         }
         textView1=(TextView) findViewById(R.id.textView1);
-        textView1.setText(Receiver.labelPathFileName);
+        textView1.setText(Receiver.labelPathFileNameIn);
     }
 
     //---

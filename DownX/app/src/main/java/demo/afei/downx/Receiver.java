@@ -35,14 +35,15 @@ public class Receiver extends BroadcastReceiver {
     private static String url;
     private static String filename="";
     private static boolean isDown=false;
-    private static String LABEL_ROOT_DIR="Downx";
-    private static String LABEL_FILENAME="_downx";
+    private static String LABEL_ROOT_DIR="downx";
+    private static String LABEL_FILENAME_IN="_in";
+    private static String LABEL_FILENAME_OUT="_out";
     private static String labelPathFileRootDir="";
-    public static String labelPathFileName="";
-    private static String downPathFileName="";
+    public static String labelPathFileNameIn ="";
+    public static String labelPathFileNameOut ="";
     @Override
     public void onReceive(Context context, Intent intent) {
-        TAG=context.getClass().getPackage().getName();
+        TAG=this.getClass().getPackage().getName();
         logw("DailyReceiver onReceive()!");
         Toast.makeText(context, "downx--start()"+ yyyymdhms.format(new Date()), Toast.LENGTH_SHORT).show();
         if (intent.getAction().equals(ACTION_BEGIN)) {
@@ -60,15 +61,16 @@ public class Receiver extends BroadcastReceiver {
     public static boolean init(){
         String roorDir=Environment.getExternalStorageDirectory().getAbsolutePath();
         labelPathFileRootDir=roorDir+"/"+LABEL_ROOT_DIR;
-        labelPathFileName = labelPathFileRootDir + "/"+LABEL_FILENAME;
-        logw("DIR [" +labelPathFileName+"]");
+        labelPathFileNameIn = labelPathFileRootDir + "/"+LABEL_FILENAME_IN;
+        labelPathFileNameOut= labelPathFileRootDir + "/"+LABEL_FILENAME_OUT;
+        logw("DIR [" + labelPathFileNameIn +"]");
         File f=new File(labelPathFileRootDir);
         if (!f.exists()){
             f.mkdir();
-            File f1=new File(labelPathFileName);
+            File f1=new File(labelPathFileNameIn);
             try {
                 OutputStreamWriter out = null;
-                out = new OutputStreamWriter(new FileOutputStream(labelPathFileName), "utf-8");
+                out = new OutputStreamWriter(new FileOutputStream(labelPathFileNameIn), "utf-8");
                 out.write("[url]\n");
                 out.write("[filename]\n");
                 out.close();
@@ -84,8 +86,8 @@ public class Receiver extends BroadcastReceiver {
     }
     private boolean start(){
         if (init()) {
-            if (readLines(labelPathFileName, "utf-8")) {
-                logw(url);
+            if (readLines(labelPathFileNameIn, "utf-8")) {
+                logw("start:---");
                 String downPathFileName= labelPathFileRootDir + "/"+filename;
                 logw(downPathFileName);
                 DownTask d = new DownTask(url, downPathFileName);
@@ -127,12 +129,12 @@ public class Receiver extends BroadcastReceiver {
                 logw("=--->"+line);
                 if (line.indexOf("[url]")==0){
                     url=line.substring("[url]".length());
-                }else if (line.indexOf("[filename]")==0){
-                    filename=line.substring("[filename]".length());
+                }else if (line.indexOf("[name]")==0){
+                    filename=line.substring("[name]".length());
                 }
             }
-            logw(url);
-            logw(filename);
+            logw("url:"+url);
+            logw("name:"+filename);
             if (url.length()>0 && filename.length()>0) {
                 return true;
             }
@@ -170,12 +172,12 @@ public class Receiver extends BroadcastReceiver {
         @Override
         public void run() {
             try {
+                logw("[run] " +urlD);
+                logw("[run] " +filePathName);
                 if (urlD.length()==0){
                     logw("Error: downloadUrl is null! ");
                     return;
                 }
-                logw(urlD);
-                logw(urlD);
                 isDown=true;
                 //URL url = new URL("https://www.baidu.com/bd_logo1.png");
                 URL url = new URL(urlD);
@@ -208,7 +210,7 @@ public class Receiver extends BroadcastReceiver {
                     out.write(ss);
                     out.close();
                     logw("success!");
-                    writeResult(0);
+                    outResult(0);
                 }else{
                     logw("fail!");
                 }
@@ -216,30 +218,40 @@ public class Receiver extends BroadcastReceiver {
                 if (in != null) {
                     in.close();
                 }
-                writeResult(1);
+                outResult(1);
                 isDown=false;
             }  catch (Exception e) {
                 isDown=false;
-                writeResult(1);
+                outResult(1);
                 logw("[run] Error:"+e.getMessage());
             }
 
         }
     }
 
-    private static void writeResult(int flag){
+    private static void outResult(int flag){
         try {
             OutputStreamWriter out = null;
-            out = new OutputStreamWriter(new FileOutputStream(LABEL_FILENAME), "utf-8");
+            out = new OutputStreamWriter(new FileOutputStream(labelPathFileNameOut), "utf-8");
             out.write("" + flag);
             out.close();
         }catch (Exception e){
-            logw("[writeResult] Error:"+e.getMessage());
+            logw("[outResult] Error:"+e.getMessage());
         }
     }
 
     private static void logw(String text){
+
         Log.w(TAG, text);
+        try {
+            String filename=labelPathFileRootDir + "/_down.log";;
+            OutputStreamWriter out = null;
+            out = new OutputStreamWriter(new FileOutputStream(filename), "utf-8");
+            out.write("" + text);
+            out.close();
+        }catch (Exception e){
+            logw("[outResult] Error:"+e.getMessage());
+        }
     }
 
 }
