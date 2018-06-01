@@ -1,34 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="10dp"
-              android:gravity="center"
-              android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    android:layout_marginBottom="1dp"
+    android:background="@color/theme_bg_dark"
     >
 
-    <ImageView
-        android:id="@+id/top1_img"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/id_t1_ltab1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:src="@drawable/icon_mycircle_post_more_fav"
-        />
+        android:gravity="center"
+        android:orientation="vertical">
+        <!-- android:clickable="false" 是为了防止ImageButton截取了触摸事件 ，这里事件要给它的上一级linearlayout-->
+        <ImageButton
+            android:id="@+id/id_tab1_page1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@mipmap/maintab_icon_1_normal"/>
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:text="@string/app_name"
-        android:gravity="center_horizontal"
-        android:textColor="@color/limegreen"
-        android:textSize="20sp"/>
-
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/id_t1_ltab2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        android:src="@drawable/icon_mycircle_post_more_edit"
-        />
+        <ImageButton
+            android:id="@+id/id_tab1_page2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@mipmap/maintab_icon_2_normal"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_t1_ltab3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/id_tab1_page3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@mipmap/maintab_icon_3_normal"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/id_t1_ltab4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/id_tab1_page4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@mipmap/maintab_icon_4_normal"/>
+
+    </LinearLayout>
+
 </LinearLayout>

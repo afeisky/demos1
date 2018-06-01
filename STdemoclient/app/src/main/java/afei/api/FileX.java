@@ -1,11 +1,16 @@
 package afei.api;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 /**
@@ -73,7 +78,7 @@ public class FileX {
                 }
             }
         } catch (IOException e) {
-                e.printStackTrace();
+            e.printStackTrace();
         }
         return null;
     }
@@ -98,16 +103,58 @@ public class FileX {
             }
             return resultString;
         } catch (IOException e) {
-            e.printStackTrace();
+            e.getMessage();
         }finally {
             try {
                 if (is!=null)
                     is.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                e.getMessage();
             }
         }
         return "";
     }
+    public static boolean writeLines(String filePathName,String lines,String encode){
+        File f=new File(filePathName);
+        try {
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(filePathName), encode);
+            out.write(lines);
+            out.close();
+            return true;
+        }catch (Exception e){
+            Log.e("FileX",e.getMessage());
+            return false;
+        }
 
+    }
+
+    public static void add2File(String filePathName, String content) {
+        try {
+            FileWriter writer = new FileWriter(filePathName, true);
+            writer.write(content);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getJsonString(String filepathname,String encode){
+        String data="";
+        //String filepathname=Global.workPath+"/snbk_now/gnbk_180125_174529.json";
+        LogX.w(TAG,"get="+filepathname);
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            BufferedReader bf = new BufferedReader(new InputStreamReader(new FileInputStream(filepathname),encode));
+            String line;
+            while ((line = bf.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            bf.close();
+            data=stringBuilder.toString();
+            return data;
+        }catch (Exception e){
+            LogX.e(TAG,"Error: getJsonString() "+e.getStackTrace());
+        }
+        return data;
+    }
 }

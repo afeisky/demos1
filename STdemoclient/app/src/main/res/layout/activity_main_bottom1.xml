@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:clickable="false"
-            android:src="@drawable/mainpage_tab_mycircle_selected"/>
+            android:src="@mipmap/maintab_icon_1_normal"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:clickable="false"
-            android:src="@drawable/mainpage_tab_discovery_normal"/>
+            android:src="@mipmap/maintab_icon_2_selected"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
             android:background="#00000000"
             android:clickable="false"
 
-            android:src="@drawable/mainpage_tab_message_normal"/>
+            android:src="@mipmap/maintab_icon_3_normal"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:clickable="false"
-            android:src="@drawable/mainpage_tab_setting_normal"/>
+            android:src="@mipmap/maintab_icon_4_normal"/>
 
         <TextView
             android:layout_width="wrap_content"

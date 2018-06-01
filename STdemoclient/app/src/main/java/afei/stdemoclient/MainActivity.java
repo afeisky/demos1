@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import afei.api.Global;
 import afei.api.LogX;
 
 
@@ -27,22 +28,28 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
   
   
     //四个Tab每个Tab都有一个按钮  
-    private LinearLayout mTabMyCircle;
-    private LinearLayout mTabMyDiscovery;  
-    private LinearLayout mTabMyMsg;  
-    private LinearLayout mTabMyCenter;  
+    private LinearLayout id_tab_b_1;
+    private LinearLayout id_tab_b_2;
+    private LinearLayout id_tab_b_3;
+    private LinearLayout id_tab_b_4;
+    private LinearLayout id_tab_b_5;
     //四个按钮  
-    private ImageButton myCircleImg;
-    private ImageButton myDiscoveryImg;  
-    private ImageButton myMsgImg;  
-    private ImageButton myCenterImg;  
-  
+    private ImageButton id_tab1_page1;
+    private ImageButton id_tab1_page2;
+    private ImageButton id_tab1_page3;
+    private ImageButton id_tab1_page4;
+
+    private ImageButton id_tab_img1;
+    private ImageButton id_tab_img2;
+    private ImageButton id_tab_img3;
+    private ImageButton id_tab_img4;
+    private ImageButton id_tab_img5;
     @Override  
     public void onCreate(Bundle savedInstanceState) {  
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-
+        Global.init();
         if (hasGrantExternalRW(this)) {
             init();
         }
@@ -58,16 +65,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void initViews() {  
   
         mViewPager = (ViewPager) findViewById(R.id.id_viewpager);  
-        //初始化四个布局  
-        mTabMyCircle = (LinearLayout) findViewById(R.id.id_tab_mycircle);  
-        mTabMyDiscovery = (LinearLayout) findViewById(R.id.id_tab_discovery);  
-        mTabMyMsg = (LinearLayout) findViewById(R.id.id_tab_message);  
-        mTabMyCenter = (LinearLayout) findViewById(R.id.id_tab_setting);  
-        //初始化四个按钮  
-        myCircleImg = (ImageButton) findViewById(R.id.id_tab_mycirlceImg);  
-        myDiscoveryImg = (ImageButton) findViewById(R.id.id_tab_discovery_img);  
-        myMsgImg = (ImageButton) findViewById(R.id.id_tab_message_img);  
-        myCenterImg = (ImageButton) findViewById(R.id.id_tab_setting_img);  
+
+        //初始化四个按钮
+        id_tab1_page1 = (ImageButton) findViewById(R.id.id_tab1_page1);
+        id_tab1_page2 = (ImageButton) findViewById(R.id.id_tab1_page2);
+        id_tab1_page3 = (ImageButton) findViewById(R.id.id_tab1_page3);
+        id_tab1_page4 = (ImageButton) findViewById(R.id.id_tab1_page4);
+
+        //初始化四个布局
+        //id_tab_b_1 = (LinearLayout) findViewById(R.id.id_tab_b_1);
+        //id_tab_b_2 = (LinearLayout) findViewById(R.id.id_tab_b_2);
+        //id_tab_b_3 = (LinearLayout) findViewById(R.id.id_tab_b_3);
+        //id_tab_b_4 = (LinearLayout) findViewById(R.id.id_tab_b_4);
+        //id_tab_b_5 = (LinearLayout) findViewById(R.id.id_tab_b_5);
+        //id_tab_img1 = (ImageButton) findViewById(R.id.id_tab_img1);
+        //id_tab_img2 = (ImageButton) findViewById(R.id.id_tab_img2);
+        //id_tab_img3 = (ImageButton) findViewById(R.id.id_tab_img3);
+        //id_tab_img4 = (ImageButton) findViewById(R.id.id_tab_img4);
+        //id_tab_img5 = (ImageButton) findViewById(R.id.id_tab_img5);
     }
     private Fragment01 tab01 = new Fragment01();
     private Fragment02 tab02 = new Fragment02();
@@ -96,15 +111,31 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
   
         };  
         mViewPager.setAdapter(mAdpter);
+
+        //selectButtonTab(0);////
+        id_tab1_page1.setImageResource(R.mipmap.maintab_icon_1_selected);
     }  
   
   
-    private void initEvent() {  
+    private void initEvent() {
+
+        //id_tab_b_1.setOnClickListener(this);
+        //id_tab_b_2.setOnClickListener(this);
+        //id_tab_b_3.setOnClickListener(this);
+        //id_tab_b_4.setOnClickListener(this);
+        //id_tab_b_5.setOnClickListener(this);
+
+        //id_tab_img1.setOnClickListener(this);
+        //id_tab_img2.setOnClickListener(this);
+        //id_tab_img3.setOnClickListener(this);
+        //id_tab_img4.setOnClickListener(this);
+        //id_tab_img5.setOnClickListener(this);
         //设置监听器  
-        myCircleImg.setOnClickListener(this);  
-        myDiscoveryImg.setOnClickListener(this);  
-        myMsgImg.setOnClickListener(this);  
-        myCenterImg.setOnClickListener(this);  
+        id_tab1_page1.setOnClickListener(this);
+        id_tab1_page2.setOnClickListener(this);
+        id_tab1_page3.setOnClickListener(this);
+        id_tab1_page4.setOnClickListener(this);
+
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override  
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {  
@@ -117,16 +148,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 int currentPage = mViewPager.getCurrentItem();  
                 switch (currentPage) {  
                     case 0:
-                        selectFragment(0);
+                        LogX.w(TAG,"onPageSelected(): " +currentPage);
+                        selectTab1Fragment(0);
                         break;  
                     case 1:
-                        selectFragment(1);
+                        LogX.w(TAG,"onPageSelected(): " +currentPage);
+                        selectTab1Fragment(1);
                         break;  
                     case 2:
-                        selectFragment(2);
+                        selectTab1Fragment(2);
                         break;  
                     case 3:
-                        selectFragment(3);
+                        selectTab1Fragment(3);
                         break;  
                     default:  
                         break;  
@@ -141,36 +174,75 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         });  
   
   
-    }  
-  
-    private void reSetImg() {  
-        myCircleImg.setImageResource(R.drawable.mainpage_tab_mycircle_normal);  
-        myDiscoveryImg.setImageResource(R.drawable.mainpage_tab_discovery_normal);  
-        myMsgImg.setImageResource(R.drawable.mainpage_tab_message_normal);  
-        myCenterImg.setImageResource(R.drawable.mainpage_tab_setting_normal);  
-  
+    }
+    private void resetTab1PageImg() {
+        id_tab1_page1.setImageResource(R.mipmap.maintab_icon_1_normal);
+        id_tab1_page2.setImageResource(R.mipmap.maintab_icon_2_normal);
+        id_tab1_page3.setImageResource(R.mipmap.maintab_icon_3_normal);
+        id_tab1_page4.setImageResource(R.mipmap.maintab_icon_4_normal);
+    }
+
+    private void resetBottomTabImg() {
+        //id_tab_img1.setImageResource(R.mipmap.maintab_icon_1_normal);
+        //id_tab_img2.setImageResource(R.mipmap.maintab_icon_2_normal);
+        //id_tab_img3.setImageResource(R.mipmap.maintab_icon_3_normal);
+        //id_tab_img4.setImageResource(R.mipmap.maintab_icon_4_normal);
+        //id_tab_img5.setImageResource(R.mipmap.maintab_icon_5_normal);
     }  
   
   
     @Override  
     public void onClick(View v) {  
-        switch (v.getId()) {  
-            case R.id.id_tab_mycirlceImg:  
+        switch (v.getId()) {
+            //--bottom tab button
+            /*
+            case R.id.id_tab_b_1:
+                selectButtonTab(0);
+                break;
+            case R.id.id_tab_b_2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            :
+                selectButtonTab(1);
+                break;
+            case R.id.id_tab_b_3:
+                selectButtonTab(2);
+                break;
+            case R.id.id_tab_b_4:
+                selectButtonTab(3);
+                break;
+            case R.id.id_tab_b_5:
+                selectButtonTab(4);
+                break;
+                */
+            case R.id.id_tab_img1:
+                selectButtonTab(0);
+                break;
+            case R.id.id_tab_img2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            :
+                selectButtonTab(1);
+                break;
+            case R.id.id_tab_img3:
+                selectButtonTab(2);
+                break;
+            case R.id.id_tab_img4:
+                selectButtonTab(3);
+                break;
+            case R.id.id_tab_img5:
+                selectButtonTab(4);
+                break;
+            //
+            case R.id.id_tab1_page1:
+                LogX.w(TAG,"id_tab1_btn1(): " );
                 mViewPager.setCurrentItem(0);
-                selectFragment(0);
-                break;  
-            case R.id.id_tab_discovery_img:  
+                break;
+            case R.id.id_tab1_page2:
+                LogX.w(TAG,"id_tab1_btn2(): " );
                 mViewPager.setCurrentItem(1);
-                selectFragment(1);
-                break;  
-            case R.id.id_tab_message_img:  
+                break;
+            case R.id.id_tab1_page3:
                 mViewPager.setCurrentItem(2);
-                selectFragment(2);
-                break;  
-            case R.id.id_tab_setting_img:  
-                mViewPager.setCurrentItem(3);
-                selectFragment(3);
-                break;  
+                break;
+            case R.id.id_tab1_page4:
+                finish();
+                //mViewPager.setCurrentItem(3);
+                break;
             default:  
                 break;
         }
@@ -191,30 +263,65 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
     }
-    private void selectFragment(int id){
+    private void selectTab1Fragment(int id){
+        LogX.w(TAG,"selectTab1Fragment(): " + id);
+        resetTab1PageImg();
         selectpage(id);
         switch (id) {
             case 0:
-                reSetImg();
-                myCircleImg.setImageResource(R.drawable.mainpage_tab_mycircle_selected);
+                id_tab1_page1.setImageResource(R.mipmap.maintab_icon_1_selected);
                 LogX.w(TAG,"fragmemt01");
                 break;
             case 1:
-                reSetImg();
-                myDiscoveryImg.setImageResource(R.drawable.mainpage_tab_discovery_selected);
+                id_tab1_page2.setImageResource(R.mipmap.maintab_icon_2_selected);
                 break;
             case 2:
-                reSetImg();
-                myMsgImg.setImageResource(R.drawable.mainpage_tab_message_selected);
+                id_tab1_page3.setImageResource(R.mipmap.maintab_icon_3_selected);
                 break;
             case 3:
-                reSetImg();
-                myCenterImg.setImageResource(R.drawable.mainpage_tab_setting_selected);
+                id_tab1_page4.setImageResource(R.mipmap.maintab_icon_4_selected);
                 break;
             default:
                 break;
         }
     }
+    private void selectButtonTab(int id){
+        LogX.w(TAG,"selectButtonTab(): " + id);
+        resetBottomTabImg();
+        switch (id) {
+            case 0:
+                mViewPager.setCurrentItem(0);
+                selectpage(0);
+                //id_tab_img1.setImageResource(R.mipmap.maintab_icon_1_selected);
+                break;
+            case 1:
+                mViewPager.setCurrentItem(0);
+                selectpage(0);
+                //id_tab_img2.setImageResource(R.mipmap.maintab_icon_2_selected);
+                break;
+            case 2:
+                mViewPager.setCurrentItem(0);
+                selectpage(0);
+                //id_tab_img3.setImageResource(R.mipmap.maintab_icon_3_selected);
+                break;
+            case 3:
+                mViewPager.setCurrentItem(3);
+                selectpage(3);
+                //id_tab_img4.setImageResource(R.mipmap.maintab_icon_4_selected);
+                break;
+            case 4:
+                //mViewPager.setCurrentItem(4);
+                //id_tab_img5.setImageResource(R.mipmap.maintab_icon_5_selected);
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
+
+
+
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

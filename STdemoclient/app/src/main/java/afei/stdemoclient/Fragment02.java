@@ -16,6 +16,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.sun.mail.imap.IMAPStore;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -24,17 +26,21 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Session;
 
 import afei.api.FileX;
 import afei.api.Global;
 import afei.api.LogX;
+import afei.api.MainX;
+import afei.api.ZipUtils;
 
 
 public class Fragment02 extends android.support.v4.app.Fragment {
     private static final String TAG = "STdownnow:Fragment02";
-    private TextView mMessageView;
     private ListView listview_bk_now;
-    private Button btnDown;
+    private Button btn2_now1;
     //private List<Map<String, Object>> datalist=new ArrayList<Map<String, Object>>();
     private List<BK> list=new ArrayList<BK>();
 
@@ -49,18 +55,16 @@ public class Fragment02 extends android.support.v4.app.Fragment {
 
     public void init(View mView) {
         listview_bk_now = (ListView) mView.findViewById(R.id.listview_bk_now);
-        mMessageView = (TextView) mView.findViewById(R.id.f02_sse_txt);
-        mMessageView.setText("");
-        btnDown = (Button) mView.findViewById(R.id.btnbknow);
-        btnDown.setOnClickListener(new View.OnClickListener() {
+        btn2_now1 = (Button) mView.findViewById(R.id.btn2_now1);
+        btn2_now1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                refresh();
+                downData();
             }
         });
-        getDataBK();
-        getDataSSE();
-
+        //getDataBK1();
+        //getDataSSE();
+        //downData();
         //sa = new SimpleAdapter(getActivity(),
         //        datalist, R.layout.fragment2aitem, new String[]{"1", "2", "2"},
         //        new int[]{R.id.f02_a1, R.id.f02_a2, R.id.f02_a3});
@@ -143,7 +147,7 @@ public class Fragment02 extends android.support.v4.app.Fragment {
                     }
                 }
             }
-            mMessageView.setText(Html.fromHtml(html,Html.FROM_HTML_MODE_LEGACY));
+            //mMessageView.setText(Html.fromHtml(html,Html.FROM_HTML_MODE_LEGACY));
         }catch (Exception e){
             LogX.e(TAG, "Error: getDataSSE:" + e.getMessage());
         }
@@ -308,7 +312,78 @@ public class Fragment02 extends android.support.v4.app.Fragment {
             }
             return;
         } catch (Exception e) {
-            LogX.e(TAG, "Error: getDataBK:" + e.getMessage());
+            LogX.e(TAG, "Error: getDataBK:" + e.getStackTrace());
+            e.printStackTrace();
+        }
+        return;
+
+
+        //Map<String, Object> map1 = new HashMap<String, Object>();
+        //map1.put("time", timeNow);
+        //map1.put("code", "gn_afdfaaa");
+    }
+    private void getDataBK2(String filename) {
+        try {
+            JSONObject json=null;
+            //String filename=Global.workPath+"/snbk.txt";
+            File f=new File(filename);
+            LogX.d(TAG,f.getAbsolutePath());
+            String data="";
+            if (f.exists()) {
+                data = FileX.readLines(filename, "utf-8");
+                LogX.d(TAG,data.substring(0,30));
+            }else{
+                return;
+            }
+            json=new JSONObject(data);
+            //LogX.d(TAG,json.toString());
+            if (json!=null && json.toString().length()>10) {
+                //LogX.w(TAG,json.toString());
+                JSONArray ja_gn = json.getJSONArray("gn");
+                JSONArray ja_new = json.getJSONArray("ne");
+                JSONArray ja_hy = json.getJSONArray("hy");
+                str_time = json.getString("time");
+                LogX.e(TAG, "str_time=" + str_time);
+                int gn_len = ja_gn.length();
+                int new_len = ja_new.length();
+                int hy_len = ja_hy.length();
+                LogX.e(TAG, "len=" + gn_len + "," + new_len + "," + hy_len);
+                JSONArray ja = null;
+                //LogX.e(TAG, "=" + js_gn.toString());
+                BK bk = new BK();
+                //list.add(bk);
+                 if (true) {
+                    int max = gn_len > new_len ? gn_len : new_len;
+                    max = max > hy_len ? max : hy_len;
+                    for (int i = 0; i < max; i++) {
+                        bk = new BK();
+                        bk.key = 1;
+                        if (ja_gn.length() > i) {
+                            ja = ja_gn.getJSONArray(i);
+                            bk.a1 = ja.get(0).toString();
+                            bk.a2 = ja.get(1).toString().trim();
+                            bk.a3 = Double.parseDouble(ja.get(1).toString().trim());
+                        }
+                        if (ja_new.length() > i) {
+                            ja = ja_new.getJSONArray(i);
+                            bk.b1 = ja.get(0).toString();
+                            bk.b2 = ja.get(1).toString().trim();
+                            bk.b3 = Double.parseDouble(ja.get(1).toString().trim());
+                        }
+                        if (ja_hy.length() > i) {
+                            ja = ja_hy.getJSONArray(i);
+                            bk.c1 = ja.get(0).toString();
+                            bk.c2 = ja.get(1).toString().trim();
+                            bk.c3 = Double.parseDouble(ja.get(1).toString().trim());
+                        }
+                        list.add(bk);
+                    }
+                }
+            }
+            return;
+        } catch (Exception e) {
+            LogX.e(TAG, "Error: getDataBK2:" + e.getStackTrace());
+            e.printStackTrace();
 
         }
         return;
@@ -319,41 +394,105 @@ public class Fragment02 extends android.support.v4.app.Fragment {
         //map1.put("code", "gn_afdfaaa");
     }
 
-    private void refresh() {
-        LogX.e(TAG, "--refresh--->");
+    class MyRunnable implements Runnable {
+        @Override
+        public void run() {
+            try {
+                String dir=Global.workPath;
+                LogX.w(TAG,"dir="+ dir);
+                ArrayList<String> filens=new ArrayList<String>();
+                String tmp=Global.workPath+"/tmp";
+                File f=new File(tmp);
+                f.delete();
+                f.mkdir();
+                filens=new MainX().cmdRead("cmdbk",tmp);//
+                if (filens!=null) {
+                    for (String fn : filens) {
+                        LogX.w(TAG,"aaa="+ fn);
+                        f = new File(tmp + "/" + fn);
+                        ArrayList<String> filenames=null;
+                        filenames =new ZipUtils().unzipFile(f.getAbsolutePath(), dir);
+                        //f.delete();
+                        LogX.w(TAG,"111:"+filenames);
+                        if (filenames.size()>0){
+                            for (String s:filenames){
+                                Message msg=new Message();
+                                msg.what=100;
+                                msg.obj=dir+"/"+s;
+                                mHandler.sendMessage(msg);
+                                break;///////////////
+                            }
+                        }else{
+                            LogX.w(TAG,"Not found file!");
+                            mHandler.sendEmptyMessageDelayed(msg_id, 0);
+                            return;
+                        }
+                    }
+                }else{
+                    LogX.w(TAG,"null?");
+                }
+                //new MainX().saveMail("adatatest@163.com","1112444",null,"A");
+            } catch (Exception e) {
+                LogX.e(TAG,e.getStackTrace()+"");
+                e.printStackTrace();
+                mHandler.sendEmptyMessageDelayed(msg_id, 0);
+            }
+        }
+    }
+    private void refresh(String filepathname) {
+        long startTime = System.currentTimeMillis();  //開始時間
+        if (filepathname==null){
+            LogX.e(TAG, "--refresh--->filepathname==null");
+            return;
+        }
+        LogX.d(TAG, "--refresh--->"+filepathname);
         list.clear();
-        getDataBK();
-        getDataSSE();
+        getDataBK2(filepathname);
+        long consumingTime = System.currentTimeMillis()-startTime;
+        LogX.e(TAG, consumingTime+"ms");
+        btn2_now1.setText(str_time);
+       //getDataSSE();
         sa.notifyDataSetChanged();
+         consumingTime = System.currentTimeMillis()-startTime;
+        LogX.e(TAG, consumingTime+"ms");
+
+    }
+    private void downData() {
+        //refresh("/storage/emulated/0/A/cmd1001,.txt");//getDataBK1();
+        //getDataBK2("/storage/emulated/0/A/cmd1001,.txt");
+        new Thread(new MyRunnable()).start();
     }
 
     private boolean isRunning = true;
     private final int msg_id = 1;
-    private int msg_delay_secondes = 5000;
+    private int msg_delay_secondes = 60*1000;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case msg_id:
-                    refresh();
+                    btn2_now1.setText(str_time+" ...");
+                    downData();
                     removeMessages(msg_id);
+                case 100:
+                    refresh((String)msg.obj);
                     if (isRunning) {
                         sendEmptyMessageDelayed(msg_id, msg_delay_secondes);//this.sendMessageDelayed()
                         break;
                     }
+                    break;
             }
         }
     };
 
     public void stopUpdate() {
-        mHandler.removeMessages(msg_id);
+        //mHandler.removeMessages(msg_id);
         isRunning = false;
     }
 
     public void startUpdate() {
         isRunning = true;
-        refresh();
         mHandler.sendEmptyMessageDelayed(msg_id, 0);
     }
 
@@ -372,6 +511,12 @@ public class Fragment02 extends android.support.v4.app.Fragment {
         private int count;
         private int number;
     }
+    private String str_time="";
+    int bg=Color.parseColor("#aaaaaa");
+    int red=Color.parseColor("#cc0033");
+    int green=Color.parseColor("#009933");
+    
+    
     public class MyAdapter extends BaseAdapter {
         private LayoutInflater mInflater = null;
         public MyAdapter(Context context){
@@ -407,7 +552,6 @@ public class Fragment02 extends android.support.v4.app.Fragment {
                 convertView = mInflater.inflate(R.layout.fragment2aitem, null);
                 holder.a1 = (TextView) convertView.findViewById(R.id.f02_a1);
                 holder.a2 = (TextView) convertView.findViewById(R.id.f02_a2);
-
                 holder.b1 = (TextView) convertView.findViewById(R.id.f02_b1);
                 holder.b2 = (TextView) convertView.findViewById(R.id.f02_b2);
                 holder.c1 = (TextView) convertView.findViewById(R.id.f02_c1);
@@ -421,24 +565,27 @@ public class Fragment02 extends android.support.v4.app.Fragment {
             BK bk=list.get(position);
             //holder.img.setImageResource(R.drawable.ic_launcher);
             holder.a1.setText(bk.a1);
+            holder.a1.setTextColor(bg);
             holder.a2.setText(bk.a2);
             holder.b1.setText(bk.b1);
+            holder.b1.setTextColor(bg);
             holder.b2.setText(bk.b2);
             holder.c1.setText(bk.c1);
+            holder.c1.setTextColor(bg);
             holder.c2.setText(bk.c2);
             if (true) {
-                holder.a2.setTextColor(bk.a3>0?Color.RED:Color.GREEN);//Color.rgb(255, 255, 255)); Color.parseColor("#FF0000"));
-                holder.b2.setTextColor(bk.b3>0?Color.RED:Color.GREEN);
-                holder.c2.setTextColor(bk.c3>0?Color.RED:Color.GREEN);
+                holder.a2.setTextColor(bk.a3>0?red:green);//Color.rgb(255, 255, 255)); Color.parseColor("#FF0000"));
+                holder.b2.setTextColor(bk.b3>0?red:green);
+                holder.c2.setTextColor(bk.c3>0?red:green);
             }else{
                 if (bk.key < 2) {
-                    holder.a2.setTextColor(Color.RED);//Color.rgb(255, 255, 255)); Color.parseColor("#FF0000"));
-                    holder.b2.setTextColor(Color.RED);
-                    holder.c2.setTextColor(Color.RED);
+                    holder.a2.setTextColor(red);//Color.rgb(255, 255, 255)); Color.parseColor("#FF0000"));
+                    holder.b2.setTextColor(red);
+                    holder.c2.setTextColor(red);
                 } else {
-                    holder.a2.setTextColor(Color.GREEN);//Color.rgb(255, 255, 255));
-                    holder.b2.setTextColor(Color.GREEN);
-                    holder.c2.setTextColor(Color.GREEN);
+                    holder.a2.setTextColor(green);//Color.rgb(255, 255, 255));
+                    holder.b2.setTextColor(green);
+                    holder.c2.setTextColor(green);
                 }
             }
 

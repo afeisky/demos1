@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="40dp"
+              android:orientation="horizontal"
+              android:layout_marginBottom="1dp"
+              android:background="@color/theme_bg_dark"
+    >
+
+    <LinearLayout
+        android:id="@+id/id_tab_b_1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+        <!-- android:clickable="false" 是为了防止ImageButton截取了触摸事件 ，这里事件要给它的上一级linearlayout-->
+        <ImageButton
+            android:id="@+id/id_tab_img1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@mipmap/maintab_icon_1_normal"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_tab_b_2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/id_tab_img2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@mipmap/maintab_icon_2_normal"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_tab_b_3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/id_tab_img3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@mipmap/maintab_icon_3_normal"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/id_tab_b_4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/id_tab_img4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@mipmap/maintab_icon_4_normal"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/id_tab_b_5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/id_tab_img5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@mipmap/maintab_icon_5_normal"/>
+    </LinearLayout>
+</LinearLayout>

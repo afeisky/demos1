@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import afei.api.FileX;
+import afei.api.Global;
 import afei.api.LogX;
 
 
@@ -49,7 +51,9 @@ public class Fragment01 extends android.support.v4.app.Fragment {
     }
 
     public void init(){
-
+        String filepathname= Global.workPath+"/download_lhb/lhb_c_2018-02-09.txt";
+        String data=FileX.readLines(filepathname,"gb2312");
+        LogX.w(TAG,"");
     }
 
 }

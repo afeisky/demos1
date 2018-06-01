@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+
 /**
  * Created by chaofei on 18-1-17.
  */
@@ -15,7 +16,7 @@ import java.io.RandomAccessFile;
 public class LogX {
 
     private static File fileSave=null;
-    private static final String filePathName="_logSoh1.txt";
+    private static String filePathName="AA.log";
     public LogX(){
 
     }
@@ -24,21 +25,24 @@ public class LogX {
     }
     public static void init(String workdir,String filePathName){
         File f = Environment.getExternalStorageDirectory();
-        Global.workPath = f.getAbsolutePath() + Global.WORK_DIR;
-        f = new File(Global.workPath);
-        if (!f.exists()) {
-            f.mkdir();
+        String dir=workdir;
+        if (workdir.length()==0){
+            dir=Global.WORK_DIR;
         }
-        //fileSave = new File(f.getAbsolutePath() +"/"+ filePathName);
-        String snbk_now = Global.workPath + "/snbk_now";
-        f = new File(snbk_now);
-        if (!f.exists()) {
-            f.mkdir();
-        }
-        fileSave = new File(f.getAbsolutePath() +"/"+ filePathName);
-        LogX.d("LogX",fileSave.getAbsolutePath());
-    }
+        Global.workPath = f.getAbsolutePath() + dir;
 
+        Log.w("LOGX1:",Global.workPath);
+        f = new File(Global.workPath);
+        if (f==null) {
+            Log.w("LOGX1",Global.workPath);
+            f.mkdir();
+        }
+        if (!f.exists()) {
+            Log.w("LOGX2",Global.workPath);
+            f.mkdir();
+        }
+        fileSave = new File(f.getAbsolutePath() + "/" + filePathName);
+    }
 
     private static void write2File_with_seek(String fileName, String content) {
         try {
@@ -53,6 +57,9 @@ public class LogX {
     }
 
     private static void write2File(String TAG,String str){
+        if (true){
+            return;
+        }
         try {
             if (fileSave==null){
                 init();
@@ -66,11 +73,18 @@ public class LogX {
                 writer.close();
             }
         }catch (Exception e){
-            Log.e("ERROR"," Fail to save log!"+e.getStackTrace());
+            Log.e("ERROR"," Fail to save log!"+e.getMessage()+ fileSave.getAbsolutePath());
+            init(Global.WORK_DIR,filePathName);
         }
     }
-    public static void d(String TAG, String str){
+    public static void i(String TAG, String str){
         Log.w(TAG, str);
+        write2File(TAG,str);
+    }
+    public static void d(String TAG, String str){
+        //if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.w(TAG, str);
+        //}
         write2File(TAG,str);
     }
     public static void w(String TAG, String str){
