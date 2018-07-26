@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ST2db">
+    <output-path>$PROJECT_DIR$/out/artifacts/ST2db</output-path>
+    <root id="archive" name="ST2db.jar">
+      <element id="module-output" name="ST2db" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="library" level="project" name="json" />
+      <element id="library" level="project" name="mysql" />
+    </root>
+  </artifact>
+</component>
