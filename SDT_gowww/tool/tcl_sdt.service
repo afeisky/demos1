@@ -1,0 +1,12 @@
+#chaofei.wu.hz@tcl.com add for SDT get data from Simplex service.  2018-08-07 v1.0.2
+[Unit]
+Description=TclSdt_Sshfs
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/SDT1 service
+ExecStop=
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,0 +1,92 @@
+#!/bin/bash
+#copy SDT1 to /usr/sbin/SDT1
+p=( $1 $2)
+p1=$1 #"alps/frameworks/base/api/system-current.txt"
+p2=$2 #"/copy_to" #"copy_to"
+function readme() {
+cat <<EOF
+---command:-------------------------added by chaofei.wu.hz@tcl.com.
+  SDT1 sshfs   # /automount/ssh_sdt_data.log
+  SDT1 copy    # /disk2/tclbigdata/data/bak_from
+     
+-------------------------------------------------------------------
+EOF
+}
+
+
+echo "  time: "`date '+%Y-%m-%d %H:%M:%S'` 
+echo "  param1: $p1"
+echo "  param2: $p2"
+echo ""
+if [ "$1" == "sshfs0" ];then
+   #crontab -e
+   #0 */1 * * *   sdt1 sshfs_mount_root@10.92.33.85 > /automount/ssh_sdt_data.log
+   #0 */1 * * *   sshfs -o allow_other root@10.92.33.85:/simplex/SDT/ /automount/ssh_sdt_data
+   echo "  start time: "`date '+%Y-%m-%d %H:%M:%S'`  >> /disk2/tclbigdata/data/run.log 
+   sshfs -o allow_other root@10.92.33.85:/simplex/SDT/ /automount/ssh_sdt_data 
+elif [ "$1" == "sshfs" ];then
+   #crontab -e
+   #0 */1 * * *   sdt1 sshfs_mount_root@10.92.33.85 > /automount/ssh_sdt_data.log
+   #0 */1 * * *   sshfs -o allow_other root@10.92.33.85:/simplex/SDT/ /automount/ssh_sdt_data
+   echo "  start time: "`date '+%Y-%m-%d %H:%M:%S'`  >> /disk2/tclbigdata/data/run.log 
+   sshfs -o allow_other root@10.92.33.85:/simplex/SDT/ /automount/ssh_sdt_data 
+   /disk2/tclbigdata/sdt/sdt_copy_from_3385 /automount/ssh_sdt_data /disk2/tclbigdata/data/bak_from
+   cd /disk2/tclbigdata/data/
+   pwd
+   sudo ./sdt_unzip /disk2/tclbigdata/data/bak_from /disk2/tclbigdata/data/out debug  # need sudo ,because mount Tctpersist.ext4
+   cd /disk2/tclbigdata/data/
+   pwd
+   ./sdt_parser /disk2/tclbigdata/data/out test debug
+   echo "  end  time: "`date '+%Y-%m-%d %H:%M:%S'`  >> /disk2/tclbigdata/data/run.log 
+   /disk2/tclbigdata/sdt/sdt_copy sdt_loopcheckfile
+elif [ "$1" == "unzip" ];then
+   #crontab -e
+   #0 */1 * * *   sdt1 sshfs_mount_root@10.92.33.85 > /automount/ssh_sdt_data.log
+   #0 */1 * * *   sshfs -o allow_other root@10.92.33.85:/simplex/SDT/ /automount/ssh_sdt_data
+   echo "  start time: "`date '+%Y-%m-%d %H:%M:%S'`  >> /disk2/tclbigdata/data/run.log 
+   /disk2/tclbigdata/sdt/sdt_copy_from_3385 /automount/ssh_sdt_data /disk2/tclbigdata/data/bak_from
+   cd /disk2/tclbigdata/data/
+   pwd
+   sudo ./sdt_unzip /disk2/tclbigdata/data/bak_from /disk2/tclbigdata/data/out debug  # need sudo ,because mount Tctpersist.ext4
+   cd /disk2/tclbigdata/data/
+   pwd
+   ./sdt_parser /disk2/tclbigdata/data/out test debug
+   echo "  end  time: "`date '+%Y-%m-%d %H:%M:%S'`  >> /disk2/tclbigdata/data/run.log 
+elif [ "$1" == "service" ];then
+   echo "  start time: "`date '+%Y-%m-%d %H:%M:%S'`  >> /disk2/tclbigdata/data/sdt_loopcheckfile.log 
+   sshfs -o allow_other root@10.92.33.85:/simplex/SDT/ /automount/ssh_sdt_data 
+   /disk2/tclbigdata/data/sdt_loopcheckfile /disk2/tclbigdata/data/bak_from /disk2/tclbigdata/data/out save2db debug
+   /disk2/chaofei/golang/goPATH/bin/bee run github.com/beego/wuchaofei/sdtwww >> /disk2/tclbigdata/sdtwww.log
+elif [ "$1" == "www" ];then
+   echo "  start time: "`date '+%Y-%m-%d %H:%M:%S'` 
+   echo $PATH
+   echo $GOROOT
+   bee run github.com/beego/wuchaofei/sdtwww >> /disk2/tclbigdata/sdtwww.log
+elif [ "$1" == "run" ];then
+   echo "  start time: "`date '+%Y-%m-%d %H:%M:%S'`  >> /disk2/tclbigdata/data/run_loopcheckfile.log 
+   /disk2/tclbigdata/sdt/sdt_copy/sdt_loopcheckfile
+elif [ "$1" == "parser" ];then
+   cd /disk2/tclbigdata/data/
+   pwd
+   ./sdt_parser /disk2/tclbigdata/data/out test debug
+elif [ "$1" == "parser1" ];then
+   cd /disk2/tclbigdata/data/
+   pwd
+   ./sdt_parser /disk2/tclbigdata/data/out save2db debug 
+elif [ "$1" == "test" ];then
+   #crontab -e
+   #0 */1 * * *   sdt1 sshfs_mount_root@10.92.33.85 > /automount/ssh_sdt_data.log
+   #0 */1 * * *   sshfs -o allow_other root@10.92.33.85:/simplex/SDT/ /automount/ssh_sdt_data
+   echo "  start time: "`date '+%Y-%m-%d %H:%M:%S'`  >> /disk2/tclbigdata/data/run1.log 
+   echo "  end  time: "`date '+%Y-%m-%d %H:%M:%S'`  >> /disk2/tclbigdata/data/run1.log 
+elif [ "$1" == "test2" ];then
+   #crontab -e
+   #0 */1 * * *   sdt1 sshfs_mount_root@10.92.33.85 > /automount/ssh_sdt_data.log
+   #0 */1 * * *   sshfs -o allow_other root@10.92.33.85:/simplex/SDT/ /automount/ssh_sdt_data
+   echo "  start time: "`date '+%Y-%m-%d %H:%M:%S'`  >> /disk2/tclbigdata/data/run2.log 
+   echo "  end  time: "`date '+%Y-%m-%d %H:%M:%S'`  >> /disk2/tclbigdata/data/run2.log 
+elif [ "$1" == "copy" ] || [ "$1" == "download" ];then
+   /disk2/tclbigdata/sdt/sdt_copy_from_3385 /automount/ssh_sdt_data /disk2/tclbigdata/data/bak_from
+else
+      readme
+fi

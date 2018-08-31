@@ -1,0 +1,103 @@
+mysql -u root;
+show databases;
+use mysql;
+update user set authentication_string=PASSWORD("tcl1234") where User='root';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'10.92.34.26' IDENTIFIED BY '1234' WITH GRANT OPTION;
+mysql无法远程访问10061错误，各种方式授权后也无效（ubuntu 16.04LTS mysql 5.7.13）
+/etc/mysql/mysql.conf.d/mysqld.cnf
+bind-address = 127.0.0.1
+前面加# 变成 # bind-address = 127.0.0.1
+sudo service mysql restart
+
+
+mysql 10060错误一般因为防火墙
+ufw allow 3306;　　　　　　　　//允许外部访问3306端口
+ufw allow from 192.168.1.115;　 //允许此IP访问所有的本机端口
+ufw status;　　　　　　　　　   //查看防火墙状态
+ufw disable/enable;　　　　　　//关闭或打开防火墙
+
+没装ufw就执行安装既可：apt-get install ufw;
+
+mysql 10061错误为配置原因
+第一步：
+先查看mysql运行状态
+netstat -ntlp | grep -v tcp6;　　//查看端口状态
+mysql -V;　　　　　　　　　  //查看mysql版本号
+find / -name mysqld.cnf; 　　  // 查找mysqld.cnf 的位置
+如果端口为127.0.0.1:3306，解决办法
+mysql5.7 版本：
+vi /etc/mysql/mysql.conf.d/mysqld.cnf;　　//将bind-address = 127.0.0.1 修改成 bind-address = 0.0.0.0
+mysql5.7以前的版本：
+vi /etc/mysql/my.cnf;　　//将bind-address = 127.0.0.1 修改成 bind-address = 0.0.0.0 ，或注释掉即可
+service mysql restart;　　　　//重启mysql
+netstat -ntlp | grep -v tcp6;　  //查看端口状态为0.0.0.0:3306即可
+第二步：
+mysql -uroot -p123;//登录mysql
+use mysql;//进入mysql数据库
+select Host,User from user;//查看user表中root是否支持外部访问，localhost 只支持本地； IP地址只支持
+Host　　　　　　User
+localhost　　　　root　　//只支持本地
+%　　　　　　　root　　//全部IP都允许
+192.168.1.115 　root　　//只支持此IP
+
+mysql> create database testDB DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci; # utf8_general_ci表示不区分大小写
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'10.92.34.26' IDENTIFIED BY '1234' WITH GRANT OPTION; //给此IP地址授权
+grant all privileges on testDB.* to “test”@”localhost” identified by “1234”; 
+grant all privileges on 库名.表名 to '用户名'@'IP地址' identified by '密码' with grant option;
+GRANT ALL PRIVILEGES ON tclsysdb.* TO 'chaofei_wu'@'%' IDENTIFIED BY 'chaofei123' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON tclsysdb.* TO 'chaofei_wu'@'10.92.34.26' IDENTIFIED BY 'chaofei123' WITH GRANT OPTION;
+FLUSH PRIVILEGES;//刷刷新系统权限表
+
+mysql> select Host,User from user;
++-------------+------------------+
+| Host        | User             |
++-------------+------------------+
+| %           | chaofei_wu       |
+| 10.92.34.26 | chaofei_wu       |
+| localhost   | debian-sys-maint |
+| localhost   | mysql.session    |
+| localhost   | mysql.sys        |
+| localhost   | root             |
++-------------+------------------+
+mysql> show grants for root@localhost;  #查看权限
+mysql> show grants for chaofei_wu@10.92.34.26;  #查看权限
+
+
+全局层级
+全局权限适用于一个给定服务器中的所有数据库。这些权限存储在mysql.user表中。GRANT ALL ON *.*和REVOKE ALL ON *.*只授予和撤销全局权限。
+数据库层级
+数据库权限适用于一个给定数据库中的所有目标。这些权限存储在mysql.db和mysql.host表中。GRANT ALL ON db_name.*和REVOKE ALL ON db_name.*只授予和撤销数据库权限。  
+表层级
+表权限适用于一个给定表中的所有列。这些权限存储在mysql.tables_priv表中。GRANT ALL ON db_name.tbl_name和REVOKE ALL ON db_name.tbl_name只授予和撤销表权限。
+
+--------------------------------------------------------------------
+Ubuntu16.04下修改MySQL数据的默认存储位置
+1.首先第一步当然是down掉MySQL了：
+    # /etc/init.d/mysql stop
+2.接着创建新的数据库路径：
+    # mkdir -p /chaofei_wu_db/mysql
+3.复制MySQL原有的数据，注意，MySQL的原始数据存在/var/lib/mysql/下。
+    # cp -R /var/lib/mysql/* /chaofei_wu_db/mysql
+4.注意一定要修改权限，因为/var/lib/mysql 文件夹的属性就是如下的：
+    # chown -R mysql:mysql /chaofei_wu_db/mysql
+5.修改配置文件夹
+    # vim /etc/mysql/mysql.conf.d/mysqld.cnf
+    将 [mysqld] 组下的 datadir改为：
+    datadir = /chaofei_wu_db/mysql
+6.修改启动文件
+    # vim /etc/apparmor.d/usr.sbin.mysqld 
+    把  /var/lib/mysql r  
+        /var/lib/mysql/** rwk  
+    修改成  
+        /chaofei_wu_db/mysql r  
+        /chaofei_wu_db/mysql/** rwk,   
+7.修改启动文件
+   # gedit /usr/share/mysql/mysql-systemd-start
+    把    #datadir=$(get_mysql_option mysqld datadir "/var/lib/mysql")
+    修改成  datadir=$(get_mysql_option mysqld datadir "/chaofei_wu_db/mysql")
+8.重启服务
+    # /etc/init.d/apparmor restart  
+    # /etc/init.d/mysql restart
+    # /etc/init.d/mysql start
+-------------------------------------------------------------------   
